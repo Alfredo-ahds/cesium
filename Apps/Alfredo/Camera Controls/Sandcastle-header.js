@@ -45,7 +45,6 @@
             button.setAttribute('type', 'text');
 			button.setAttribute('value', toolbarID);
 			button.className = 'cesium-button';
-			console.log(button.id);
             document.getElementById(toolbarID || 'toolbar').appendChild(button);
         },
         addDefaultToolbarButton : function(text, onclick, toolbarID) {
