@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version (or Chrome Frame if pre-IE11). -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../../../../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../../../../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+function startup(Cesium) {
+
+	var viewer = new Cesium.Viewer('cesiumContainer', {
+		baseLayerPicker : false,
+		fullscreenButton : false,
+		geocoder : false,
+		homeButton : false,
+		sceneModePicker : false,
+		navigationHelpButton : false, 
+		selectionIndicator : false,
+		targetFrameRate : 24
+	});
+	
+	var timeStart = Cesium.JulianDate.fromIso8601("2015-06-02T00:00:30Z");
+	var timeEnd = Cesium.JulianDate.fromIso8601("2015-06-02T23:59:30Z");
+	viewer.timeline.zoomTo(timeStart, timeEnd);
+	viewer.clock.startTime = timeStart.clone();
+	viewer.clock.stopTime = timeEnd.clone();
+	viewer.clock.currentTime = timeStart.clone();
+	viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+	viewer.clock.multiplier = 100;
+	viewer.clock.clockStep = Cesium.ClockStep.TICK_DEPENDENT;
+	
+	console.log("Done creating clock");	
+	var rectangles = [];
+	var heightMap = [];
+	colorMap = [];
+	var colors = [];
+	var newPrimitiveCollection = [];
+	var primitiveCollection = [];
+	var count = 0;
+	var flag = 0;
+	
+	Cesium.KmlDataSource.load("../Resources/precipitation.kmz").then(function(dataSource) {
+		console.log(dataSource._entityCollection.values);
+		var count = 0;
+		var entities = dataSource._entityCollection.values;
+		var time = viewer.clock.currentTime;
+		for(var i = 0; i < entities.length; i+=2) {
+			heightMap[count] = new Cesium.SampledProperty(Number);
+			heightMap[count].addSample(timeStart, 0);
+			heightMap[count].addSample(timeEnd, entities[i+1].name * 10000);
+			var position = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entities[i].polygon.hierarchy.getValue(time).positions);
+			rectangles[count] = Cesium.Rectangle.fromCartographicArray(position);
+			colors[count] = entities[i].polygon.material.getValue(time).color;
+			colorMap[count] = new Cesium.SampledProperty(Cesium.Color);	
+			colorMap[count].addSample(timeStart, Cesium.Color.fromRgba("0xCC5dffba"));
+			colorMap[count].addSample(timeEnd, colors[count])
+			count++;
+		}	
+		
+		console.log(rectangles);
+		
+		for(var i = 0; i < rectangles.length; i++) {
+			primitiveCollection.push(new Cesium.GeometryInstance({
+				geometry : new Cesium.RectangleGeometry({
+					rectangle : rectangles[i], 
+					extrudedHeight : heightMap[i].getValue(time)
+				}),
+				attributes : {
+					color : Cesium.ColorGeometryInstanceAttribute.fromColor(colorMap[i].getValue(time))
+				}
+			}));
+		}
+		
+		viewer.scene.primitives.add(new Cesium.Primitive({
+			geometryInstances : primitiveCollection,
+			appearance : new Cesium.PerInstanceColorAppearance()
+		}));	
+		
+		viewer.clock.onTick.addEventListener(function() {
+			if(flag == 0) {
+				console.log("Tick");
+				
+				var time = viewer.clock.currentTime;
+				newPrimitiveCollection = [];
+				for(var i = 0; i < rectangles.length; i++) {
+					newPrimitiveCollection.push(new Cesium.GeometryInstance({
+						geometry : new Cesium.RectangleGeometry({
+							rectangle : rectangles[i], 
+							extrudedHeight : heightMap[i].getValue(time)
+						}),
+						attributes : {
+							color : Cesium.ColorGeometryInstanceAttribute.fromColor(colorMap[i].getValue(time))
+						}
+					}));
+				}
+				viewer.scene.primitives.add(new Cesium.Primitive({
+					geometryInstances : newPrimitiveCollection,
+					appearance : new Cesium.PerInstanceColorAppearance()
+				}));
+				//console.log(viewer.scene.primitives.get(1));
+				viewer.scene.primitives.get(1).readyPromise.then(function() {
+					console.log("Resolved, removing first primitive");
+					viewer.scene.primitives.remove(viewer.scene.primitives.get(0));
+					count = 0;
+					flag = 0;
+				});
+				flag = 1;
+			}
+			count++;
+		});
+		
+		console.log("Finished");
+		
+	})
+	
+	var eventHandler = new Cesium.ScreenSpaceEventHandler();
+	eventHandler.setInputAction(function() {
+		console.log("click");
+		var time = viewer.clock.currentTime;
+		newPrimitiveCollection = [];
+		for(var i = 0; i < rectangles.length; i++) {
+			newPrimitiveCollection.push(new Cesium.GeometryInstance({
+				geometry : new Cesium.RectangleGeometry({
+					rectangle : rectangles[i], 
+					extrudedHeight : heightMap[i].getValue(time)
+				}),
+				attributes : {
+					color : Cesium.ColorGeometryInstanceAttribute.fromColor(colors[i])
+				}
+			}));
+		}
+		viewer.scene.primitives.add(new Cesium.Primitive({
+			geometryInstances : newPrimitiveCollection,
+			appearance : new Cesium.PerInstanceColorAppearance()
+		}));
+		//console.log(viewer.scene.primitives.get(1));
+		viewer.scene.primitives.get(1).readyPromise.then(function() {
+			console.log("Resolved, removing first primitive");
+			viewer.scene.primitives.remove(viewer.scene.primitives.get(0));
+		});
+	}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+	
+}
+	
+if (typeof Cesium !== "undefined") {
+	startup(Cesium);
+} else if (typeof require === "function") {
+	require(["Cesium"], startup);
+}	
+
+</script>
+  
+</body>
+</html>

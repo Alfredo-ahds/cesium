@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version (or Chrome Frame if pre-IE11). -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../../../../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../../../../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+function startup(Cesium) {
+
+	var viewer = new Cesium.Viewer('cesiumContainer', {
+		baseLayerPicker : false,
+		fullscreenButton : false,
+		geocoder : false,
+		homeButton : false,
+		navigationHelpButton : false, 
+		selectionIndicator : false,
+		targetFrameRate : 24
+	});
+	
+	Cesium.KmlDataSource.load("../Resources/precipitation.kmz").then(function(dataSource) {
+		console.log(dataSource.entities.values.length)
+		var rectangles = [];
+		var colors = [];
+		var heights = [];
+		var count = 0;
+		
+		var time = viewer.clock.currentTime;
+		for(var i = 0; i < dataSource.entities.values.length; i+=2) {
+			var position = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(dataSource.entities.values[i].polygon.hierarchy.getValue(time).positions);
+			rectangles[count] = Cesium.Rectangle.fromCartographicArray(position);
+			colors[count] = dataSource.entities.values[i].polygon.material.getValue(time).color;
+			heights[count] = dataSource.entities.values[i+1].name * 10000;
+			count++;
+		}
+		
+		var primitiveCollection = [];
+		for(var i = 0; i < rectangles.length; i++) {
+			primitiveCollection.push(new Cesium.GeometryInstance({
+				geometry : new Cesium.RectangleGeometry({
+					rectangle : rectangles[i], 
+					extrudedHeight : heights[i]
+				}),
+				attributes : {
+					color : Cesium.ColorGeometryInstanceAttribute.fromColor(colors[i])
+				}
+			}));
+		}
+		
+		viewer.scene.primitives.add(new Cesium.Primitive({
+			geometryInstances : primitiveCollection,
+			appearance : new Cesium.PerInstanceColorAppearance()
+		}));	
+		
+		console.log("Done");
+	});
+	
+}
+	
+if (typeof Cesium !== "undefined") {
+	startup(Cesium);
+} else if (typeof require === "function") {
+	require(["Cesium"], startup);
+}	
+
+</script>
+  
+</body>
+</html>

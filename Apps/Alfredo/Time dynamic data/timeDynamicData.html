@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version (or Chrome Frame if pre-IE11). -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="../../../../Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(../../../../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+function startup(Cesium) {
+
+	var viewer = new Cesium.Viewer('cesiumContainer', {
+		baseLayerPicker : false,
+		fullscreenButton : false,
+		geocoder : false,
+		homeButton : false,
+		sceneModePicker : false,
+		navigationHelpButton : false, 
+		selectionIndicator : false,
+		targetFrameRate : 24
+	});
+
+	viewer.dataSources.add(Cesium.KmlDataSource.load("../Resources/coverage0.kmz")).then(function(dataSource) {
+		var months = {JAN:"01", FEB:"02", MAR:"03", APR:"04", MAY:"05", JUN:"06", JUL:"07", AUG:"08", SEP:"09", OCT:"10", NOV:"11", DEC:"12"};
+		//attempting to create czml animated object programmatically. Should be identical to the simple.czml.
+		var positionCollection = new Cesium.SampledPositionProperty();
+		var groundPositionCollection = new Cesium.SampledPositionProperty();
+		
+		var timeStart = viewer.dataSources.get(0).entities.values[0].description._value;
+		timeStart = timeStart.slice(187, 207);
+		timeStart = timeStart.slice(0,5) + months[timeStart.slice(5,8)] + "-" + timeStart.slice(9,11) + "T" + timeStart.slice(12) + "Z";
+		console.log(timeStart);
+		var timeEnd = viewer.dataSources.get(0).entities.values[(viewer.dataSources.get(0).entities.values.length - 1)].description._value;
+		timeEnd = timeEnd.slice(187, 207)
+		timeEnd = timeEnd.slice(0,5) + months[timeEnd.slice(5,8)] + "-" + timeEnd.slice(9,11) + "T" + timeEnd.slice(12) + "Z";
+		console.log(timeEnd);
+		
+		timeStart = Cesium.JulianDate.fromIso8601(timeStart);
+		timeEnd = Cesium.JulianDate.fromIso8601(timeEnd);
+		
+		viewer.timeline.zoomTo(timeStart, timeEnd);
+		viewer.clock.startTime = timeStart.clone();
+		viewer.clock.stopTime = timeEnd.clone();
+		viewer.clock.currentTime = timeStart.clone();
+		viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+		viewer.clock.multiplier = 10;
+		
+		for(var i = 0; i  < viewer.dataSources.get(0).entities.values.length; i++) {
+			var pos = viewer.dataSources.get(0).entities.values[i].polygon.hierarchy._value.positions[0];
+			var groundPosition = pos;
+			pos = Cesium.Ellipsoid.WGS84.cartesianToCartographic(pos);
+			pos.height = 5000000;
+			pos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(pos);
+			console.log(pos);
+			var time = Cesium.JulianDate.addSeconds(timeStart, i*60, new Cesium.JulianDate());
+			console.log(time);
+			positionCollection.addSample(time, pos);
+			groundPositionCollection.addSample(time, groundPosition);
+		}
+		
+		console.log(viewer.dataSources.get(0).entities.values[0].polygon.material.color._value)		
+		
+		viewer.entities.add({
+			id : "sat",
+			availability : new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({
+				start : timeStart,
+				stop : timeEnd
+			})]),
+			position : positionCollection,
+			model : {
+				uri : '../Resources/test.gltf',
+				minimumPixelSize : 64, 
+				scale : 2
+			},
+			path : {
+				resolution : 120,
+				material : new Cesium.PolylineGlowMaterialProperty({
+					glowPower : 0.1,
+					color : viewer.dataSources.get(0).entities.values[0].polygon.material.color._value
+				}),
+				width : 10,
+				leadTime : 0
+			}
+		});
+		viewer.entities.add({
+			id : "ground",
+			availability : new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({
+				start : timeStart,
+				stop : timeEnd
+			})]),
+			position : groundPositionCollection
+		});
+		
+		var positionCollection2 = Cesium.ReferenceProperty.fromString(viewer.entities, "sat#position");
+		var groundPositionCollection2 = Cesium.ReferenceProperty.fromString(viewer.entities, "ground#position");
+		
+		console.log(positionCollection2);
+		console.log(groundPositionCollection2);
+		
+		var reference = [positionCollection2, groundPositionCollection2];
+		
+		var reference2 = new Cesium.PositionPropertyArray(reference);
+		
+		console.log(reference2);
+		
+		viewer.entities.add({
+			name : "test",
+			availability : new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({
+				start : timeStart,
+				stop : timeEnd
+			})]),
+			polyline : {
+				positions : reference2,
+				width : 5,
+				material : Cesium.Color.RED
+			}
+		});
+		
+		
+		console.log("Done");
+		
+	});
+	
+	
+}
+	
+if (typeof Cesium !== "undefined") {
+	startup(Cesium);
+} else if (typeof require === "function") {
+	require(["Cesium"], startup);
+}	
+
+</script>
+  
+</body>
+</html>

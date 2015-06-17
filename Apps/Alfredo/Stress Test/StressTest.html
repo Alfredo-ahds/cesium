@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">  <!-- Use Chrome Frame in IE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="description" content="A simple KML example.">
+    <meta name="cesium-sandcastle-labels" content="Showcases, DataSources">
+    <title>Polygon based stress test</title>
+    <script type="text/javascript" src="Sandcastle-header.js"></script>
+	<script src="../../../../Build/Cesium/Cesium.js"></script>
+</head>
+<body class="sandcastle-loading" data-sandcastle-bucket="bucket-requirejs.html">
+<style>
+    @import url(../../../Sandcastle/templates/bucket.css);
+</style>
+<div id="cesiumContainer" class="fullSize"></div>
+<div id="loadingOverlay"><h1>Loading...</h1></div>
+<div id="Sources"></div>
+
+<script id="cesium_sandcastle_script">
+function startup(Cesium) {
+
+	var kmlLoadingObject = Cesium.KmlDataSource;
+	var sourcesArray = [];
+	var sourceDir = "../Resources/coverage";
+	var currentSourceNumber = 0;
+	var totalLoadedObjects = 0;
+	
+	for(var i = 0; i < 10; i++) {
+		sourcesArray[i] = kmlLoadingObject.load(sourceDir + i + '.kmz');
+	}
+
+	var viewer = new Cesium.Viewer('cesiumContainer', {
+		animation : false,
+		baseLayerPicker : false,
+		fullscreenButton : false,
+		geocoder : false,
+		homeButton : false,
+		sceneModePicker : false,
+		timeline : false,
+		navigationHelpButton : false
+	});
+	
+	var dataSources = viewer.dataSources;
+	viewer.extend(Cesium.viewerCesiumInspectorMixin);
+	viewer.extend(Cesium.viewerPerformanceWatchdogMixin, {
+		lowFrameRateMessage : 'Low framerate warning'
+	});
+	
+	Sandcastle.addToolbarButton('Remove Source',
+		function() {
+			currentSourceNumber--;
+			console.log("Deleting source.. ");
+			console.log("Deleting source number " + currentSourceNumber);
+			totalLoadedObjects -= dataSources.get(currentSourceNumber).entities.values.length;
+			console.log("Deleted source: " + dataSources.remove(dataSources.get(currentSourceNumber), false));
+			console.log("Current total loaded objects: " + totalLoadedObjects);
+		}
+	, 'Sources');
+	
+	Sandcastle.addToolbarButton('Add Source',
+		function() {
+			console.log("Adding source.. ");
+			console.log("Added source number " + currentSourceNumber);
+			dataSources.add(sourcesArray[currentSourceNumber]).then(function() {
+				console.log("Done");
+				//for(var j = 0; j < 250; j++) {
+					//dataSources.get(currentSourceNumber).entities.values[j].polygon.material = "../Resources/Earth.jpg";
+				//}
+			});
+			totalLoadedObjects += dataSources.get(currentSourceNumber).entities.values.length;
+			console.log("Current total loaded objects: " + totalLoadedObjects);
+			currentSourceNumber++;
+		}
+	, 'Sources');
+	
+	Sandcastle.finishedLoading();
+}
+
+if (typeof Cesium !== "undefined") {
+    startup(Cesium);
+} else if (typeof require === "function") {
+    require(["Cesium"], startup);
+}
+
+</script>
+</body>
+</html>
