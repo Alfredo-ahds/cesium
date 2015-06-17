@@ -1,5 +1,9 @@
 function cesiumFunctions(id) {
 
+    "use strict";
+    /*jshint validthis:true */
+    /*global Cesium, console */
+
 	var DayStyles = [0xBB0000FF, 0xBBFFFF00, 0xBB00FF00, 0xBB00FFFF, 0xBBFFFFFF];
 	var NightStyles = [0xBB0000B4, 0xBBB4B400, 0xBB00B400, 0xBB00B4B4, 0xBBB4B4B4];
 	var isLoaded = [false, false, false, false, false, false, false, false, false, false];
@@ -54,7 +58,7 @@ function cesiumFunctions(id) {
 			}, 8, "track");
 			handler.setInputAction(function () {
 				console.log(viewer.camera.position);
-			}, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+			}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 		} else {
 			tracking = false;
 		}
@@ -62,7 +66,7 @@ function cesiumFunctions(id) {
 
 	handler.setInputAction(function (pos) {
 		console.log(viewer.camera.position);
-		console.log(viewer.camera.positionWC)
+		console.log(viewer.camera.positionWC);
 	}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
 	this.changeStyle = function (Source, Style) {
@@ -71,11 +75,9 @@ function cesiumFunctions(id) {
 			console.log("This source has not been loaded.");
 		} else {
 			drawType = detectDrawType(kmlsLoaded[Source]);
-			//console.log(drawType);
-			//console.log(Style);
 			changeColor(kmlsLoaded[Source], Style);
 		}
-	}
+	};
 
 	this.toggleEnable = function (Source) {
 		console.log("Toggle Enable");
@@ -85,7 +87,7 @@ function cesiumFunctions(id) {
 			visible[Source] = !visible[Source];
 			toggleShow(kmlsLoaded[Source], visible[Source]);
 		}
-	}
+	};
 
 	this.manageSources = function (Source, callback) {
 		if (!isLoaded[Source]) {
@@ -97,19 +99,21 @@ function cesiumFunctions(id) {
 				objectsLoaded += dataSources.get(dataSources.length - 1).entities.values.length;
 				console.log(objectsLoaded);
 				callback();
-				if (screenOverlayShown)
+				if (screenOverlayShown) {
 					updateOverlay();
+				}
 			});
 		} else {
 			isLoaded[Source] = !isLoaded[Source];
 			dataSources.remove(kmlsLoaded[Source], true);
 			kmlsLoaded[Source] = undefined;
 			console.log("Unloading source");
-			if (screenOverlayShown)
+			if (screenOverlayShown) {
 				updateOverlay();
+			}
 		}
 		visible[Source] = !visible[Source];
-	}
+	};
 
 	this.flyToEntity = function (Source, Entity) {
 		var sourceNumber = document.getElementById(Source).value;
@@ -129,7 +133,7 @@ function cesiumFunctions(id) {
 			//console.log(entity.description);
 			//entity.polygon.material = Cesium.Color.WHITE;
 		}
-	}
+	};
 
 	this.toggleOverlays = function () {
 		var layers = viewer.scene.imageryLayers;
@@ -154,12 +158,14 @@ function cesiumFunctions(id) {
 				var camHeight = viewer.camera.position.z;
 				if (camHeight < lastCamHeight) {
 					transparency = transparency - 0.05;
-					if (transparency < 0)
+					if (transparency < 0) {
 						transparency = 0;
+					}
 				} else {
-					transparency = transparency + .05;
-					if (transparency > 1)
+					transparency = transparency + 0.05;
+					if (transparency > 1) {
 						transparency = 1;
+					}
 				}
 				testOverlay.alpha = transparency;
 				lastCamHeight = camHeight;
@@ -170,7 +176,7 @@ function cesiumFunctions(id) {
 			eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.WHEEL);
 		}
 		overlayActive = !overlayActive;
-	}
+	};
 
 	this.loadOverlay = function (latStart, longStart, latEnd, longEnd, picSource) {
 		var lat1 = document.getElementById(latStart).value;
@@ -187,15 +193,15 @@ function cesiumFunctions(id) {
 			destination : Cesium.Cartesian3.fromDegrees(long2, lat2, 2500000)
 		});
 
-	}
+	};
 
 	this.returnScene = function () {
 		return viewer.scene;
-	}
+	};
 
 	this.returnViewer = function () {
 		return viewer;
-	}
+	};
 
 	this.drawRectangle = function () {
 		var points = [];
@@ -234,7 +240,7 @@ function cesiumFunctions(id) {
 					viewer.entities.add({
 						rectangle : {
 							coordinates : Cesium.Rectangle.fromCartographicArray(points),
-							material : Cesium.Color.RED.withAlpha(.5)
+							material : Cesium.Color.RED.withAlpha(0.5)
 						}
 					});
 					entity.label.show = false;
@@ -247,7 +253,7 @@ function cesiumFunctions(id) {
 				}
 			}
 		}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-	}
+	};
 
 	this.drawPolygon = function () {
 		var points = [];
@@ -295,19 +301,19 @@ function cesiumFunctions(id) {
 				polygon : {
 					hierarchy : points
 				}
-			})
+			});
 		}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-	}
+	};
 
 	this.clearGlobe = function () {
-		console.log(viewer.entities.values.length)
+		console.log(viewer.entities.values.length);
 		viewer.entities.removeAll();
 		viewer.dataSources.removeAll(true);
 		viewer.scene.primitives.removeAll();
 		kmlsLoaded = [];
 		isLoaded = [false, false, false, false, false, false, false, false, false, false];
 		visible = [false, false, false, false, false, false, false, false, false, false];
-	}
+	};
 
 	this.toggleMode = function () {
 		mode = (mode + 1) % 3;
@@ -325,15 +331,15 @@ function cesiumFunctions(id) {
 		default:
 			scene.morphTo3D();
 		}
-	}
+	};
 
 	this.tour = function () {
 		var index = 0;
 		var prevColor;
 		var prevThis = this;
 		viewer.dataSources.removeAll(true);
-		for (var i = 0; i < isLoaded.length; i++) {
-			isLoaded[i] = false;
+		for (var dataSource = 0; dataSource < isLoaded.length; dataSource++) {
+			isLoaded[dataSource] = false;
 		}
 		viewer.dataSources.add(Cesium.KmlDataSource.load('../Resources/actuals.kml')).then(function (dataSource) {
 			console.log(dataSource);
@@ -363,7 +369,7 @@ function cesiumFunctions(id) {
 					prevColor = randomEntity.polygon.material;
 					randomEntity.polygon.material = Cesium.Color.AQUA;
 					randomEntity.polygon.outlineColor = Cesium.Color.AQUA;
-					console.log(viewer.selectedEntity = randomEntity)
+					console.log(viewer.selectedEntity = randomEntity);
 					prevThis.flyToPos({
 						entity : {
 							entity : randomEntity,
@@ -388,16 +394,16 @@ function cesiumFunctions(id) {
 				});
 				console.log("Done");
 			}
-		}
-	}
+		};
+	};
 
 	this.improvedTour = function () {
 		var index = 1;
 		var prevColor;
 		var prevThis = this;
 		viewer.dataSources.removeAll(true);
-		for (var i = 0; i < isLoaded.length; i++) {
-			isLoaded[i] = false;
+		for (var dataSource = 0; dataSource < isLoaded.length; dataSource++) {
+			isLoaded[dataSource] = false;
 		}
 		//console.log(this);
 		this.manageSources(0, function () {
@@ -418,12 +424,12 @@ function cesiumFunctions(id) {
 				setTimeout(function () {
 					moveCamera({
 						cartesian : new Cesium.Cartesian3(-1500000, -1300000, 4300000)
-					}, 4, loop)
+					}, 4, loop);
 				}, 500);
 				//moveCamera({cartesian : new Cesium.Cartesian3(10000, -15000, 61000)}, 8, loop);
 				//viewer.camera.position = new Cesium.Cartesian3(770000, -232000, 1980000);
 			});
-			console.log("Done")
+			console.log("Done");
 		});
 
 		function loop() {
@@ -445,34 +451,39 @@ function cesiumFunctions(id) {
 					});
 				//console.log(viewingInterval);
 				viewer.clock.multiplier = 150;
-				viewer.clock.onTick.addEventListener(function (clock) {
-					if (Cesium.TimeInterval.contains(viewingInterval, clock.currentTime)) {
-						clock.onTick.removeEventListener(arguments.callee);
-						clock.multiplier = 10;
-						//tracking = false;
-						console.log(entity);
-						//create the sampled property for the path of the camera down to the entity. 
-						var cameraPath = new Cesium.SampledPositionProperty();
-						//cameraPath.addSample(clock.currentTime, )
-						clock.onTick.addEventListener(function (clock) {
-							
-							//change view to entity on the ground
-							console.log("Done tracking");
-							tracking = false; 
-					
-							if(!Cesium.TimeInterval.contains(viewingInterval, clock.currentTime)) {
-								clock.onTick.removeEventListener(arguments.callee);
-								console.log("leaving interval");
-								index++;
-								loop();
-							}
-						});
-					}
-				});
+
+				var exitInterval = function(clock) {
+
+                    //change view to entity on the ground
+                    console.log("Done tracking");
+                    tracking = false;
+
+                    if(!Cesium.TimeInterval.contains(viewingInterval, clock.currentTime)) {
+                        clock.onTick.removeEventListener(exitInterval);
+                        console.log("leaving interval");
+                        index++;
+                        loop();
+                    }
+                };
+
+				var waitForInterval = function(clock) {
+                    if (Cesium.TimeInterval.contains(viewingInterval, clock.currentTime)) {
+                        clock.onTick.removeEventListener(waitForInterval);
+                        clock.multiplier = 10;
+                        //tracking = false;
+                        console.log(entity);
+                        //create the sampled property for the path of the camera down to the entity.
+                        var cameraPath = new Cesium.SampledPositionProperty();
+                        //cameraPath.addSample(clock.currentTime, )
+                        clock.onTick.addEventListener(exitInterval);
+                    }
+                };
+
+				viewer.clock.onTick.addEventListener(waitForInterval);
 				console.log(entity);
 			}
 		}
-	}
+	};
 
 	this.generateAnimation = function (Source) {
 		var months = {
@@ -489,6 +500,39 @@ function cesiumFunctions(id) {
 			NOV : "11",
 			DEC : "12"
 		};
+
+		function dateToString(entity) {
+            var toParse = entity.description._value;
+            var parser = document.createElement("html");
+            parser.innerHTML = toParse;
+            var elements = (parser.getElementsByTagName("td"));
+            var timeString;
+            for (var elementIndex = 0; elementIndex < elements.length; elementIndex++) {
+                if (elements[elementIndex].textContent.indexOf("Time:") > -1) {
+                    timeString = elements[elementIndex + 1].textContent;
+                }
+            }
+            //console.log(timeString);
+            var months = {JAN : "01",FEB : "02",MAR : "03",APR : "04",MAY : "05",JUN : "06",JUL : "07",AUG : "08",SEP : "09",OCT : "10",NOV : "11",DEC : "12"};
+            var year = timeString.slice(0, 4);
+            var month;
+            var day;
+            var time;
+            if (isNaN(timeString.slice(5, 7))) {
+                month = months[timeString.slice(5, 8)];
+                day = timeString.slice(9, 11);
+                time = timeString.slice(12, 20);
+            } else {
+                month = timeString.slice(5, 7);
+                day = timeString.slice(8, 10);
+                time = timeString.slice(11, 19);
+            }
+            //console.log(year + " " + month + " " + day + " " + time);
+            var date = year + "-" + month + "-" + day + "T" + time + "Z";
+            //console.log(date);
+            return date;
+        }
+
 		//adding a '1' to the constructor results in an inertial reference frame.
 		var positionCollection = new Cesium.SampledPositionProperty();
 		positionCollection.setInterpolationOptions({
@@ -523,12 +567,12 @@ function cesiumFunctions(id) {
 		viewer.clock.multiplier = 10;
 
 		var height = 2500000 + (Source * 1000000);
-
+		var pos;
 		for (var i = 0; i < kmlsLoaded[Source].entities.values.length; i++) {
-			if (drawType == 'polygon') {
-				var pos = kmlsLoaded[Source].entities.values[i][drawType].hierarchy.getValue(viewer.clock.currentTime).positions;
+			if (drawType === 'polygon') {
+				pos = kmlsLoaded[Source].entities.values[i][drawType].hierarchy.getValue(viewer.clock.currentTime).positions;
 			} else {
-				var pos = kmlsLoaded[Source].entities.values[i][drawType].positions.getValue(viewer.clock.currentTime);
+				pos = kmlsLoaded[Source].entities.values[i][drawType].positions.getValue(viewer.clock.currentTime);
 			}
 
 			var positionsArray = Cesium.Ellipsoid.WGS84.cartesianArrayToCartographicArray(pos);
@@ -549,7 +593,7 @@ function cesiumFunctions(id) {
 			})*/
 			var time = dateToString(kmlsLoaded[Source].entities.values[i]);
 			//console.log(time);
-			if (!(center.latitude > 85) && !(center.latitude < -85)) {
+			if ((center.latitude < 85) && (center.latitude > -85)) {
 				positionCollection.addSample(time, Cesium.Ellipsoid.WGS84.cartographicToCartesian(center));
 				groundPositionCollection.addSample(time, Cesium.Ellipsoid.WGS84.cartographicToCartesian(groundPos));
 			}
@@ -624,40 +668,8 @@ function cesiumFunctions(id) {
 		material : kmlsLoaded[Source].entities.values[0][drawType].material
 		}
 		}); */
-		function dateToString(entity) {
-			var toParse = entity.description._value;
-			var parser = document.createElement("html");
-			parser.innerHTML = toParse;
-			var elements = (parser.getElementsByTagName("td"));
-			var timeString = undefined;
-			for (var i = 0; i < elements.length; i++) {
-				if (elements[i].textContent.indexOf("Time:") > -1) {
-					timeString = elements[i + 1].textContent;
-				}
-			}
-			//console.log(timeString);
-			var months = {JAN : "01",FEB : "02",MAR : "03",APR : "04",MAY : "05",JUN : "06",JUL : "07",AUG : "08",SEP : "09",OCT : "10",NOV : "11",DEC : "12"};
-			var year = timeString.slice(0, 4);
-			var month;
-			var day;
-			var time;
-			if (isNaN(timeString.slice(5, 7))) {
-				month = months[timeString.slice(5, 8)];
-				day = timeString.slice(9, 11);
-				time = timeString.slice(12, 20);
-			} else {
-				month = timeString.slice(5, 7);
-				day = timeString.slice(8, 10);
-				time = timeString.slice(11, 19);
-			}
-			//console.log(year + " " + month + " " + day + " " + time);
-			var date = year + "-" + month + "-" + day + "T" + time + "Z";
-			//console.log(date);
-			return date;
-		}
-
 		console.log("Done");
-	}
+	};
 
 	this.screenOverlay = function () {
 		if (!screenOverlayShown) {
@@ -702,7 +714,7 @@ function cesiumFunctions(id) {
 		}
 
 		screenOverlayShown = !screenOverlayShown;
-	}
+	};
 
 	this.timeDynamicData = function () {
 		var timeStart = Cesium.JulianDate.fromIso8601("2014-06-02T00:00:30Z");
@@ -773,7 +785,7 @@ function cesiumFunctions(id) {
 
 			console.log(rectangles);
 
-			for (var i = 0; i < rectangles.length; i++) {
+			for (i = 0; i < rectangles.length; i++) {
 				primitiveCollection.push(new Cesium.GeometryInstance({
 						geometry : new Cesium.RectangleGeometry({
 							rectangle : rectangles[i],
@@ -793,7 +805,7 @@ function cesiumFunctions(id) {
 			viewer.clock.multiplier = 60000;
 
 			viewer.clock.onTick.addEventListener(function () {
-				if (flag == 0) {
+				if (flag === 0) {
 					//console.log("Tick");
 
 					var time = viewer.clock.currentTime;
@@ -829,11 +841,11 @@ function cesiumFunctions(id) {
 			console.log("Finished");
 
 		});
-	}
+	};
 
 	this.dataVisualization = function () {
 		Cesium.KmlDataSource.load("../Resources/precipitation.kmz").then(function (dataSource) {
-			console.log(dataSource.entities.values.length)
+			console.log(dataSource.entities.values.length);
 			var rectangles = [];
 			var colors = [];
 			var heights = [];
@@ -849,7 +861,7 @@ function cesiumFunctions(id) {
 			}
 
 			var primitiveCollection = [];
-			for (var i = 0; i < rectangles.length; i++) {
+			for (i = 0; i < rectangles.length; i++) {
 				primitiveCollection.push(new Cesium.GeometryInstance({
 						geometry : new Cesium.RectangleGeometry({
 							rectangle : rectangles[i],
@@ -868,7 +880,7 @@ function cesiumFunctions(id) {
 
 			console.log("Done");
 		});
-	}
+	};
 
 	this.heatmapGen = function () {
 		var count = 0;
@@ -891,35 +903,34 @@ function cesiumFunctions(id) {
 			}
 		}
 		console.log("Generated rectangles");
-
 		var allDataSources = viewer.dataSources;
-		console.log(allDataSources.length)
+		console.log(allDataSources.length);
 		var dataRectangles = [];
-		for (var j = 0; j < allDataSources.length; j++) {
-			var values = allDataSources.get(j).entities.values
-				for (var i = 0; i < values.length; i++) {
-					var position = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(values[i].polygon.hierarchy.getValue(viewer.clock.currentTime).positions);
+		for (var dataSourceIndex = 0; dataSourceIndex < allDataSources.length; dataSourceIndex++) {
+			var values = allDataSources.get(dataSourceIndex).entities.values;
+				for (var entityIndex = 0; entityIndex < values.length; entityIndex++) {
+					var position = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(values[entityIndex].polygon.hierarchy.getValue(viewer.clock.currentTime).positions);
 					dataRectangles.push(Cesium.Rectangle.fromCartographicArray(position));
 				}
 		}
 
-		console.log(dataRectangles)
+		console.log(dataRectangles);
 
 		var centers = [];
 		count = 0;
-		for (var i = 0; i < dataRectangles.length; i++) {
-			centers[i] = Cesium.Rectangle.center(dataRectangles[i]);
+		for (var dataRectanglesIndex = 0; dataRectanglesIndex < dataRectangles.length; dataRectanglesIndex++) {
+			centers[dataRectanglesIndex] = Cesium.Rectangle.center(dataRectangles[dataRectanglesIndex]);
 		}
 
-		console.log(centers)
+		console.log(centers);
 
-		for (var i = 0; i < rectangles.length; i++) {
-			for (var j = 0; j < centers.length; j++) {
-				if (Cesium.Rectangle.contains(rectangles[i], centers[j])) {
-					rectanglesFreq[i]++;
+		for (var rectanglesIndex = 0; rectanglesIndex < rectangles.length; rectanglesIndex++) {
+			for (var centersIndex = 0; centersIndex < centers.length; centersIndex++) {
+				if (Cesium.Rectangle.contains(rectangles[rectanglesIndex], centers[centersIndex])) {
+					rectanglesFreq[rectanglesIndex]++;
 				}
 			}
-			//console.log(rectanglesFreq[i])
+			//console.log(rectanglesFreq[rectanglesIndex])
 		}
 
 		var eventHandler = new Cesium.ScreenSpaceEventHandler();
@@ -941,7 +952,7 @@ function cesiumFunctions(id) {
 							outline : true,
 							extrudedHeight : rectanglesFreq[i] * 100000
 						}
-					})
+					});
 				}
 			}
 			var container = viewer.container;
@@ -978,25 +989,27 @@ function cesiumFunctions(id) {
 		}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
 		var coverage = 0;
-		for (var i = 0; i < rectangles.length; i++) {
-			if (rectanglesFreq[i] > 0)
+		for (rectanglesIndex = 0; rectanglesIndex < rectangles.length; rectanglesIndex++) {
+			if (rectanglesFreq[rectanglesIndex] > 0) {
 				coverage++;
+			}
 		}
 		coverage = coverage / rectangles.length;
 		console.log(coverage);
-	}
+	};
 
 	this.flyToPos = function (target, duration, callback) {
 		console.log("Flying to position");
+		var latitude; var longitude; var altitude;
 		if (Cesium.defined(target.cartographic)) {
-			var latitude = target.cartographic.latitude;
-			var longitude = target.cartographic.longitude;
-			var altitude = target.cartographic.height;
+			latitude = target.cartographic.latitude;
+			longitude = target.cartographic.longitude;
+			altitude = target.cartographic.height;
 		} else if (Cesium.defined(target.cartesian)) {
 			var cartographicPoint = viewer.scene.globe.ellipsoid.cartesianToCartographic(target.cartesian);
-			var latitude = cartographicPoint.latitude;
-			var longitude = cartographicPoint.longitude;
-			var altitude = cartographicPoint.height;
+			latitude = cartographicPoint.latitude;
+			longitude = cartographicPoint.longitude;
+			altitude = cartographicPoint.height;
 		} else if (Cesium.defined(target.entity)) {
 			var cartographicArray = target.entity.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions;
 			console.log(cartographicArray);
@@ -1006,9 +1019,9 @@ function cesiumFunctions(id) {
 			console.log(boundingRectangle);
 			var point = Cesium.Rectangle.center(boundingRectangle);
 			console.log(point);
-			var latitude = Cesium.Math.toDegrees(point.latitude);
-			var longitude = Cesium.Math.toDegrees(point.longitude);
-			var altitude = target.entity.height;
+			latitude = Cesium.Math.toDegrees(point.latitude);
+			longitude = Cesium.Math.toDegrees(point.longitude);
+			altitude = target.entity.height;
 
 		}
 
@@ -1043,117 +1056,52 @@ function cesiumFunctions(id) {
 		cameraPos.addSample(timeInitial, initial);
 		cameraPos.addSample(timeMidpoint, midpoint);
 		cameraPos.addSample(timeDestination, destination);
-		viewer.clock.onTick.addEventListener(function (e) {
-			//console.log("tick");
-			if (Cesium.defined(cameraPos.getValue(viewer.clock.currentTime))) {
-				viewer.camera.position = cameraPos.getValue(viewer.clock.currentTime);
-				viewer.camera.direction = Cesium.Cartesian3.negate(viewer.camera.position, new Cesium.Cartesian3());
-			} else {
-				console.log(arguments.callee);
-				viewer.clock.onTick.removeEventListener(arguments.callee);
-				if (Cesium.defined(callback)) {
-					callback();
-				}
-			}
-		});
 
-	}
+		function startFlight(e) {
+            //console.log("tick");
+            if (Cesium.defined(cameraPos.getValue(viewer.clock.currentTime))) {
+                viewer.camera.position = cameraPos.getValue(viewer.clock.currentTime);
+                viewer.camera.direction = Cesium.Cartesian3.negate(viewer.camera.position, new Cesium.Cartesian3());
+            } else {
+                viewer.clock.onTick.removeEventListener(startFlight);
+                if (Cesium.defined(callback)) {
+                    callback();
+                }
+            }
+        }
+
+		viewer.clock.onTick.addEventListener(startFlight);
+
+	};
 
 	//entityProperties contains an entity and a position. Entity is used to find the position of the reference frame,
 	//and the optional position Cartesian3 is used for the initial offset when tracking an entity.
 	var viewEntity = function (entityProperties, duration, mode, callback) {
+
+	    var point;
+        var orientation;
+        var flag = false;
+        var transform;
+
 		console.log("in view entity");
-		var point;
-		var orientation;
-		var flag = false;
-		if (Cesium.defined(entityProperties.entity.position)) {
-			point = entityProperties.entity.position;
-			if (!Cesium.defined(entityProperties.entity.orientation)) {
-				entityProperties.entity.orientation = Cesium.Quaternion.IDENTITY;
-			}
-		} else {
-			var result = undefined;
-			//finds the defined graphics property, converts positions array to cartographic, forms a rectangle around
-			//the positions collection and creates a constant position property with the center point.
-			for (var i = 0; i < 20; i++) {
-				var entityType = entityProperties.entity.propertyNames[i];
-				if (entityType = "polygon" && Cesium.defined(entityProperties.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions)) {
-					result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions);
-					i = 20;
-				} else if (Cesium.defined(entityProperties.entity[entityType].positions)) {
-					result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity[entityType].positions);
-					i = 20;
-				}
-			}
-			var boundingRectangle = Cesium.Rectangle.fromCartographicArray(result);
-			var center = Cesium.Rectangle.center(boundingRectangle);
-			console.log(center);
-			point = new Cesium.ConstantPositionProperty(viewer.scene.globe.ellipsoid.cartographicToCartesian(center));
-			entityProperties.entity.orientation = Cesium.Quaternion.IDENTITY;
-		}
-		if (mode == "view") {
-			var lastCamera = {
-				position : viewer.camera.position.clone(),
-				direction : viewer.camera.direction.clone(),
-				transform : viewer.camera.transform.clone()
-			}
-			var circularPositions = [new Cesium.Cartesian3(500, 0, 0), new Cesium.Cartesian3(0, 500, 0),
-				new Cesium.Cartesian3(-500, 0, 0), new Cesium.Cartesian3(0, -500, 0),
-				new Cesium.Cartesian3(500, 0, 0)];
-			var increment = duration / 4;
-			var cameraPos = new Cesium.SampledPositionProperty();
-			var startTime = viewer.clock.currentTime.clone();
-			for (var i = 0; i < 5; i++) {
-				var time = Cesium.JulianDate.addSeconds(startTime, i * increment, new Cesium.JulianDate());
-				cameraPos.addSample(time, circularPositions[i]);
-			}
-			cameraPos.setInterpolationOptions({
-				interpolationDegree : 5,
-				interpolationAlgorithm : Cesium.LagrangePolynomialApproximation
-			});
-			viewer.clock.multiplier = 1;
-			var prim;
-			viewer.clock.onTick.removeEventListener(view);
-			viewer.clock.onTick.addEventListener(view);
-		} else if (mode == "track") {
-			tracking = true;
-			var lastCamera = {
-				position : viewer.camera.position.clone(),
-				direction : viewer.camera.direction.clone(),
-				transform : viewer.camera.transform.clone()
-			}
-			if (!Cesium.defined(entityProperties.position)) {
-				var cameraPos = new Cesium.Cartesian3(12000, -12000, 12000);
-			} else {
-				var cameraPos = entityProperties.position;
-			}
-			var referencePoint = point.getValue(viewer.clock.currentTime);
-			//var transform = Cesium.Transforms.eastNorthUpToFixedFrame(referencePoint);
-			//viewer.camera.lookAtTransform(transform, cameraPos);
-			//var prim;
-			//viewer.clock.onTick.removeEventListener(track);
-			viewer.clock.onTick.addEventListener(track);
-		} else {
-			console.log("Error");
-		}
 
 		function view(clock) {
 			viewer.scene.primitives.remove(prim);
-			if (cameraPos.getValue(clock.currentTime) == undefined) {
+			if (cameraPos.getValue(clock.currentTime) === undefined) {
 				if (Cesium.defined(callback)) {
 					clock.multiplier = 0;
 					console.log(viewer.camera.position);
 					tracking = true;
 					callback(viewer.camera.position.clone());
-					viewer.clock.onTick.removeEventListener(arguments.callee);
-					viewer.clock.onTick.addEventListener(track)
+					viewer.clock.onTick.removeEventListener(view);
+					viewer.clock.onTick.addEventListener(track);
 					//viewer.clock.onTick.removeEventListener(arguments.callee);
 				} else if (!Cesium.defined(callback)) {
 					console.log(lastCamera);
 					viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
 					viewer.camera.position = lastCamera.position;
 					viewer.camera.direction = lastCamera.direction;
-					viewer.clock.onTick.removeEventListener(arguments.callee);
+					viewer.clock.onTick.removeEventListener(view);
 				}
 			} else {
 				var referencePoint = point.getValue(clock.currentTime);
@@ -1193,19 +1141,91 @@ function cesiumFunctions(id) {
 			if (!tracking) {
 				if (Cesium.defined(callback)) {
 					callback(viewer.camera.position.clone());
-					viewer.clock.onTick.removeEventListener(arguments.callee);
+					viewer.clock.onTick.removeEventListener(track);
 				} else if (!Cesium.defined(callback)) {
 					console.log("Undo");
 					console.log(lastCamera);
 					viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
 					viewer.camera.position = lastCamera.position;
 					viewer.camera.direction = lastCamera.direction;
-					viewer.clock.onTick.removeEventListener(arguments.callee);
+					viewer.clock.onTick.removeEventListener(track);
 				}
 			}
 		}
 
-	}
+        if (Cesium.defined(entityProperties.entity.position)) {
+            point = entityProperties.entity.position;
+            if (!Cesium.defined(entityProperties.entity.orientation)) {
+                entityProperties.entity.orientation = Cesium.Quaternion.IDENTITY;
+            }
+        } else {
+            var result;
+            //finds the defined graphics property, converts positions array to cartographic, forms a rectangle around
+            //the positions collection and creates a constant position property with the center point.
+            for (var i = 0; i < 20; i++) {
+                var entityType = entityProperties.entity.propertyNames[i];
+                if (entityType === "polygon" && Cesium.defined(entityProperties.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions)) {
+                    result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions);
+                    i = 20;
+                } else if (Cesium.defined(entityProperties.entity[entityType].positions)) {
+                    result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity[entityType].positions);
+                    i = 20;
+                }
+            }
+            var boundingRectangle = Cesium.Rectangle.fromCartographicArray(result);
+            var center = Cesium.Rectangle.center(boundingRectangle);
+            console.log(center);
+            point = new Cesium.ConstantPositionProperty(viewer.scene.globe.ellipsoid.cartographicToCartesian(center));
+            entityProperties.entity.orientation = Cesium.Quaternion.IDENTITY;
+        }
+        var lastCamera; var cameraPos;
+        if (mode === "view") {
+            lastCamera = {
+                position : viewer.camera.position.clone(),
+                direction : viewer.camera.direction.clone(),
+                transform : viewer.camera.transform.clone()
+            };
+            var circularPositions = [new Cesium.Cartesian3(500, 0, 0), new Cesium.Cartesian3(0, 500, 0),
+                new Cesium.Cartesian3(-500, 0, 0), new Cesium.Cartesian3(0, -500, 0),
+                new Cesium.Cartesian3(500, 0, 0)];
+            var increment = duration / 4;
+            cameraPos = new Cesium.SampledPositionProperty();
+            var startTime = viewer.clock.currentTime.clone();
+            for (var positionsIndex = 0; positionsIndex < 5; positionsIndex++) {
+                var time = Cesium.JulianDate.addSeconds(startTime, positionsIndex * increment, new Cesium.JulianDate());
+                cameraPos.addSample(time, circularPositions[positionsIndex]);
+            }
+            cameraPos.setInterpolationOptions({
+                interpolationDegree : 5,
+                interpolationAlgorithm : Cesium.LagrangePolynomialApproximation
+            });
+            viewer.clock.multiplier = 1;
+            var prim;
+            viewer.clock.onTick.removeEventListener(view);
+            viewer.clock.onTick.addEventListener(view);
+        } else if (mode === "track") {
+            tracking = true;
+            lastCamera = {
+                position : viewer.camera.position.clone(),
+                direction : viewer.camera.direction.clone(),
+                transform : viewer.camera.transform.clone()
+            };
+            if (!Cesium.defined(entityProperties.position)) {
+                cameraPos = new Cesium.Cartesian3(12000, -12000, 12000);
+            } else {
+                cameraPos = entityProperties.position;
+            }
+            var referencePoint = point.getValue(viewer.clock.currentTime);
+            //var transform = Cesium.Transforms.eastNorthUpToFixedFrame(referencePoint);
+            //viewer.camera.lookAtTransform(transform, cameraPos);
+            //var prim;
+            //viewer.clock.onTick.removeEventListener(track);
+            viewer.clock.onTick.addEventListener(track);
+        } else {
+            console.log("Error");
+        }
+
+	};
 
 	var detectDrawType = function (dataSource) {
 		console.log("Detecting draw type");
@@ -1216,7 +1236,7 @@ function cesiumFunctions(id) {
 				return value;
 			}
 		}
-	}
+	};
 
 	var changeColor = function (dataSource, Style) {
 		var length = dataSource.entities.values.length;
@@ -1255,7 +1275,7 @@ function cesiumFunctions(id) {
 			}
 		}
 
-	}
+	};
 
 	//moves the camera position smoothly through its defined reference frame
 	//creates a sampled position property containing the beginning point, ending point,
@@ -1273,7 +1293,7 @@ function cesiumFunctions(id) {
 			cameraPath.addSample(flightTimes[2], point.cartesian);
 		} else if (Cesium.defined(point.cartographic)) {
 			cameraPath.addSample(flightTimes[0], viewer.camera.position.clone());
-			cameraPath.addSample(flightTimes[2], viewer.scene.globe.ellipsoid.cartographicToCartesian(point.cartographic))
+			cameraPath.addSample(flightTimes[2], viewer.scene.globe.ellipsoid.cartographicToCartesian(point.cartographic));
 		} else {
 			console.log("error");
 			return;
@@ -1282,27 +1302,30 @@ function cesiumFunctions(id) {
 		viewer.clock.multiplier = 1;
 		console.log("Moving camera");
 		console.log(cameraPath);
-		viewer.clock.onTick.addEventListener(function (clock) {
-			if (!Cesium.defined(cameraPath.getValue(clock.currentTime))) {
-				console.log("Completed movement")
-				viewer.clock.onTick.removeEventListener(arguments.callee);
-				viewer.clock.multiplier = prevMultiplier;
-				if (Cesium.defined(callback)) {
-					callback();
-				}
-			} else {
-				viewer.camera.position = cameraPath.getValue(clock.currentTime);
-			}
-		});
-	}
+
+		function moveCam(clock) {
+            if (!Cesium.defined(cameraPath.getValue(clock.currentTime))) {
+                console.log("Completed movement");
+                viewer.clock.onTick.removeEventListener(moveCam);
+                viewer.clock.multiplier = prevMultiplier;
+                if (Cesium.defined(callback)) {
+                    callback();
+                }
+            } else {
+                viewer.camera.position = cameraPath.getValue(clock.currentTime);
+            }
+        }
+
+		viewer.clock.onTick.addEventListener(moveCam);
+	};
 
 	var toggleShow = function (dataSource, value) {
 		for (var i = 0; i < dataSource.entities.values.length; i++) {
 			dataSource.entities.getById(dataSource.entities.values[i].id).show = value;
 		}
-	}
+	};
 
 	//If point is undefined, it will default to the default view with the globe as the central object.
 	//Will keep the same global camera position.
-	var changeCameraReferenceFrame = function (origin) {}
-};
+	var changeCameraReferenceFrame = function (origin) {};
+}

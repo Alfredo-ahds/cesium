@@ -1,5 +1,7 @@
 (function () {
-	//"use strict";
+	"use strict";
+	/*jshint validthis:true, loopfunc:true*/
+    /*global Cesium, cesiumFunctions, console */
 
 	var activeSourceNumber = 0;
 	var activeStyleNumber = 0;
@@ -8,6 +10,7 @@
 	var cesiumInstances = [];
 	var lastPosition;
 	var trigger;
+	var options;
 
 	window.menus = {
 		returnViewer : function () {
@@ -23,23 +26,23 @@
 
 			var options = function () {
 				showAppearance(toolbar);
-			}
+			};
 			addButton("Appearance", options, toolbar);
 
 			options = function () {
 				showCam(toolbar);
-			}
+			};
 			addButton("Camera control", options, toolbar);
 			console.log("Done");
 
 			options = function () {
 				showOverlays(toolbar);
-			}
+			};
 			addButton("Overlays", options, toolbar);
 			console.log("Done");
 			toolbar.appendChild(document.createElement("BR"));
 		}
-	}
+	};
 
 	function showOverlays(toolbar) {
 		while (toolbar.childNodes[9]) {
@@ -59,27 +62,27 @@
 
 		options = function () {
 			cesiumInstances[activeGlobe].screenOverlay();
-		}
+		};
 		addButton("Screen overlay", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].toggleOverlays();
-		}
+		};
 		addButton("Toggle overlays", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].dataVisualization();
-		}
+		};
 		addButton("Static 3D data", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].timeDynamicData();
-		}
+		};
 		addButton("Time dynamic 3D data", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].heatmapGen();
-		}
+		};
 		addButton("Heatmap example", options, toolbar);
 	}
 
@@ -102,7 +105,7 @@
 		//Source#, Entity#
 		addTextField("Source#", "flyToSource", "0", toolbar);
 		addTextField("Entity#", "flyToEntity", "0", toolbar);
-		var options = function () {
+		options = function () {
 			cesiumInstances[activeGlobe].flyToEntity("flyToSource", "flyToEntity");
 		};
 		addButton("Fly to entity", options, toolbar);
@@ -119,17 +122,17 @@
 					height : document.getElementById("flyToAlt").value
 				}
 			}, 4);
-		}
+		};
 		addButton("Fly to Position", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].tour();
-		}
+		};
 		addButton("Camera control tour", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].improvedTour();
-		}
+		};
 		addButton("Improved tour", options, toolbar);
 	}
 
@@ -148,7 +151,6 @@
 			parent.appendChild(child);
 			cesiumInstances[numberOfCesiumInstances] = new cesiumFunctions(child.id);
 			numberOfCesiumInstances++;
-			consoleLogging = cesiumInstances;
 			updateGlobePicker();
 			var percentOfDisplay = (100 / numberOfCesiumInstances);
 			for (var i = 0; i < document.getElementById("Cesium").children.length; i++) {
@@ -173,10 +175,10 @@
 				console.log(parent.children[i].style.left = (parent.children[i].id * percentOfDisplay) + "%");
 			}
 			updateGlobePicker();
-		}
+		};
 		addButton("Remove Cesium Instance", options, toolbar);
 
-		var options = function () {
+		options = function () {
 			toggleSync();
 		};
 		addCheckBox("Sync Globes", toolbar, options);
@@ -206,27 +208,27 @@
 		addSelectionBar("Source:  ", toolbar, options);
 
 		options = [];
-		for (var i = 0; i < 5; i++) {
-			options[i] = {
-				text : "Style " + (i + 1),
-				index : i,
+		for (var styleIndex = 0; styleIndex < 5; styleIndex++) {
+			options[styleIndex] = {
+				text : "Style " + (styleIndex + 1),
+				index : styleIndex,
 				onselect : function () {
 					activeStyleNumber = this.index;
 					console.log("Current active style: " + (activeStyleNumber + 1));
 					cesiumInstances[activeGlobe].changeStyle(activeSourceNumber, activeStyleNumber);
 				}
-			}
+			};
 		}
 		addSelectionBar("Style: ", toolbar, options);
 
 		options = function () {
 			cesiumInstances[activeGlobe].toggleEnable(activeSourceNumber);
-		}
+		};
 		addButton("Toggle enable for selected source", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].manageSources(activeSourceNumber, function () {
-				console.log("Done")
+				console.log("Done");
 			});
 		};
 		addButton("Load or unload selected source", options, toolbar);
@@ -248,12 +250,12 @@
 
 		options = function () {
 			cesiumInstances[activeGlobe].toggleMode();
-		}
+		};
 		addButton("Toggle mode", options, toolbar);
 
 		options = function () {
 			cesiumInstances[activeGlobe].generateAnimation(activeSourceNumber);
-		}
+		};
 		addButton("Animation example", options, toolbar);
 
 	}
@@ -285,8 +287,8 @@
 				cesiumInstances[i].returnScene().preRender.addEventListener(syncScenes);
 			}
 		} else {
-			for (var i = 0; i < cesiumInstances.length; i++) {
-				cesiumInstances[i].returnScene().preRender.removeEventListener(syncScenes);
+			for (var cesiumInstancesIndex = 0; cesiumInstancesIndex < cesiumInstances.length; cesiumInstancesIndex++) {
+				cesiumInstances[cesiumInstancesIndex].returnScene().preRender.removeEventListener(syncScenes);
 			}
 		}
 	}
@@ -301,7 +303,7 @@
 					activeGlobe = this.text;
 					console.log("Current globe : " + activeGlobe);
 				}
-			}
+			};
 		}
 
 		var menu = document.createElement('select');
@@ -313,9 +315,9 @@
 			}
 		};
 
-		for (var i = 0, len = options.length; i < len; ++i) {
+		for (var optionsIndex = 0, len = options.length; optionsIndex < len; ++optionsIndex) {
 			var option = document.createElement('option');
-			option.textContent = options[i].text;
+			option.textContent = options[optionsIndex].text;
 			menu.appendChild(option);
 		}
 
@@ -383,5 +385,4 @@
 		toolbar.appendChild(document.createElement("BR"));
 	}
 
-}
-	());
+}());
