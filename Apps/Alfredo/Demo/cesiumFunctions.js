@@ -3,7 +3,7 @@ function cesiumFunctions(id) {
     "use strict";
     /*jshint validthis:true */
     /*global Cesium, console */
-
+    //test commit
 	var DayStyles = [0xBB0000FF, 0xBBFFFF00, 0xBB00FF00, 0xBB00FFFF, 0xBBFFFFFF];
 	var NightStyles = [0xBB0000B4, 0xBBB4B400, 0xBB00B400, 0xBB00B4B4, 0xBBB4B4B4];
 	var isLoaded = [false, false, false, false, false, false, false, false, false, false];
