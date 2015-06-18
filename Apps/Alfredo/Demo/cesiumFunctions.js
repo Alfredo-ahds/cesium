@@ -3,7 +3,7 @@ function cesiumFunctions(id) {
     "use strict";
     /*jshint validthis:true */
     /*global Cesium, console */
-    //test commit
+
 	var DayStyles = [0xBB0000FF, 0xBBFFFF00, 0xBB00FF00, 0xBB00FFFF, 0xBBFFFFFF];
 	var NightStyles = [0xBB0000B4, 0xBBB4B400, 0xBB00B400, 0xBB00B4B4, 0xBBB4B4B4];
 	var isLoaded = [false, false, false, false, false, false, false, false, false, false];
@@ -24,7 +24,7 @@ function cesiumFunctions(id) {
 			homeButton : false,
 			sceneModePicker : false,
 			navigationHelpButton : false,
-			selectionIndicator : false,
+			//selectionIndicator : false,
 			targetFrameRate : 60
 		});
 
@@ -49,6 +49,7 @@ function cesiumFunctions(id) {
 	}
 	}, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 	 */
+
 	handler.setInputAction(function (pos) {
 		console.log("Middle click");
 		console.log(pos.position);
@@ -204,56 +205,15 @@ function cesiumFunctions(id) {
 	};
 
 	this.drawRectangle = function () {
-		var points = [];
-		var pointNumber = 0;
-		var mousePos;
-		var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-		var entity = viewer.entities.add({
-				label : {
-					show : false
-				}
-			});
-
-		eventHandler.setInputAction(function (movement) {
-			var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
-			//console.log(movement);
-			if (cartesian) {
-				var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(cartesian);
-				var longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
-				var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
-
-				entity.position = cartesian;
-				entity.label.show = true;
-				entity.label.text = '(' + longitudeString + ', ' + latitudeString + ')';
-			} else {
-				entity.label.show = false;
-			}
-		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
-		eventHandler.setInputAction(function (movement) {
-			mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
-			if (mousePos) {
-				if (pointNumber > 1) {
-					console.log("finished");
-					eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
-					eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-					viewer.entities.add({
-						rectangle : {
-							coordinates : Cesium.Rectangle.fromCartographicArray(points),
-							material : Cesium.Color.RED.withAlpha(0.5)
-						}
-					});
-					entity.label.show = false;
-				} else {
-					console.log("left click");
-					console.log(movement);
-					points[pointNumber] = viewer.scene.globe.ellipsoid.cartesianToCartographic(mousePos);
-					console.log(points[pointNumber]);
-					pointNumber++;
-				}
-			}
-		}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-	};
+        var rectangle = drawRectangle(false, function(rectangle) {
+            viewer.entities.add({
+                rectangle : {
+                    coordinates : rectangle,
+                    material : Cesium.Color.RED.withAlpha(0.5)
+                }
+            });
+        });
+    };
 
 	this.drawPolygon = function () {
 		var points = [];
@@ -1074,6 +1034,12 @@ function cesiumFunctions(id) {
 
 	};
 
+
+	/*
+	 *
+	 * Private from here downward.
+	 *
+	*/
 	//entityProperties contains an entity and a position. Entity is used to find the position of the reference frame,
 	//and the optional position Cartesian3 is used for the initial offset when tracking an entity.
 	var viewEntity = function (entityProperties, duration, mode, callback) {
@@ -1319,6 +1285,61 @@ function cesiumFunctions(id) {
 		viewer.clock.onTick.addEventListener(moveCam);
 	};
 
+	//creates an outline of a rectangle and returns a Cesium.Rectangle as a parameter to the callback.
+	var drawRectangle = function(keepOutline, callback) {
+	    var cartographicPoints = [];
+        var pointNumber = 0;
+        var mousePos;
+        var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        var rectangle;
+        var firstPass = true;
+
+        eventHandler.setInputAction(function (movement) {
+            var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
+            if (cartesian && pointNumber > 0) {
+                cartographicPoints[3] = viewer.scene.globe.ellipsoid.cartesianToCartographic(cartesian, new Cesium.Cartographic());
+                cartographicPoints[1] = new Cesium.Cartographic(cartographicPoints[0].longitude, cartographicPoints[3].latitude);
+                cartographicPoints[2] = new Cesium.Cartographic(cartographicPoints[3].longitude, cartographicPoints[0].latitude);
+                if(firstPass === true) {
+                    rectangle = viewer.entities.add({
+                        rectangle : {
+                            coordinates : new Cesium.CallbackProperty(function() {
+                                return Cesium.Rectangle.fromCartographicArray(cartographicPoints);
+                            }, false),
+                            material : Cesium.Color.RED.withAlpha(0.5)
+                        }
+                    });
+                    firstPass = false;
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+        eventHandler.setInputAction(function (movement) {
+            mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
+            if (mousePos) {
+                if(pointNumber === 0) {
+                    cartographicPoints[0] = viewer.scene.globe.ellipsoid.cartesianToCartographic(mousePos);
+                } else if(pointNumber >= 1) {
+                    eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+                    eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+                    if(!keepOutline) {
+                        viewer.entities.remove(rectangle);
+                    }
+                    if(Cesium.defined(callback)) {
+                        callback(Cesium.Rectangle.fromCartographicArray(cartographicPoints, new Cesium.Rectangle()));
+                    }
+                }
+                pointNumber++;
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+	};
+
+	//creates an outline of a polygon and returns a Cesium.PolygonHierarchy as a parameter to the callback.
+	var drawPolygon = function(keepOutline) {
+
+	};
+
+	//Given a datasource and a boolean value, will set the show/hide property for each entity.
 	var toggleShow = function (dataSource, value) {
 		for (var i = 0; i < dataSource.entities.values.length; i++) {
 			dataSource.entities.getById(dataSource.entities.values[i].id).show = value;
