@@ -205,64 +205,18 @@ function cesiumFunctions(id) {
 	};
 
 	this.drawRectangle = function () {
-        var rectangle = drawRectangle(false, function(rectangle) {
-            viewer.entities.add({
-                rectangle : {
-                    coordinates : rectangle,
-                    material : Cesium.Color.RED.withAlpha(0.5)
-                }
-            });
-        });
+	    drawRectangle(true);
     };
 
 	this.drawPolygon = function () {
-		var points = [];
-		var pointNumber = 0;
-		var mousePos;
-		var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-		var entity = viewer.entities.add({
-				label : {
-					show : false
-				}
-			});
-
-		eventHandler.setInputAction(function (movement) {
-			var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
-			if (cartesian) {
-				var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(cartesian);
-				var longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
-				var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
-
-				entity.position = cartesian;
-				entity.label.show = true;
-				entity.label.text = '(' + longitudeString + ', ' + latitudeString + ')';
-			} else {
-				entity.label.show = false;
-			}
-		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
-		eventHandler.setInputAction(function (movement) {
-			mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
-			if (mousePos) {
-				points[pointNumber] = mousePos;
-				console.log(points[pointNumber]);
-				pointNumber++;
-			}
-		}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-		eventHandler.setInputAction(function () {
-			console.log("Finished");
-			eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-			eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
-			eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-			entity.label.show = false;
-			//draw
-			viewer.entities.add({
-				polygon : {
-					hierarchy : points
-				}
-			});
-		}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+		drawPolygon(false, function(hierarchy) {
+		    viewer.entities.add({
+	           polygon : {
+	               hierarchy : hierarchy,
+	               material : Cesium.Color.RED.withAlpha(0.5)
+	           }
+	        });
+		});
 	};
 
 	this.clearGlobe = function () {
@@ -1286,7 +1240,7 @@ function cesiumFunctions(id) {
 	};
 
 	//creates an outline of a rectangle and returns a Cesium.Rectangle as a parameter to the callback.
-	var drawRectangle = function(keepOutline, callback) {
+	var drawRectangle = function(keepRectangle, callback) {
 	    var cartographicPoints = [];
         var pointNumber = 0;
         var mousePos;
@@ -1322,7 +1276,7 @@ function cesiumFunctions(id) {
                 } else if(pointNumber >= 1) {
                     eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
                     eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
-                    if(!keepOutline) {
+                    if(!keepRectangle) {
                         viewer.entities.remove(rectangle);
                     }
                     if(Cesium.defined(callback)) {
@@ -1335,8 +1289,49 @@ function cesiumFunctions(id) {
 	};
 
 	//creates an outline of a polygon and returns a Cesium.PolygonHierarchy as a parameter to the callback.
-	var drawPolygon = function(keepOutline) {
+	var drawPolygon = function(keepOutline, callback) {
+	    var hierarchy = new Cesium.PolygonHierarchy();
+	    var points = [];
+        var pointNumber = 0;
+        var mousePos;
+        var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
+        var lineString = viewer.entities.add({
+            polyline : {
+                positions : new Cesium.CallbackProperty(function() {
+                    return points;
+                }, false)
+            }
+        });
+
+        eventHandler.setInputAction(function (movement) {
+            var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
+            if (cartesian) {
+                points[pointNumber] = cartesian;
+            }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+        eventHandler.setInputAction(function (movement) {
+            mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
+            if (mousePos) {
+                pointNumber++;
+                points[pointNumber - 1] = mousePos;
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+        eventHandler.setInputAction(function () {
+            console.log("Finished");
+            eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+            eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+            hierarchy.positions = points;
+            if(!keepOutline) {
+                viewer.entities.remove(lineString);
+            }
+            if(Cesium.defined(callback)) {
+                callback(hierarchy);
+            }
+        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 	};
 
 	//Given a datasource and a boolean value, will set the show/hide property for each entity.
