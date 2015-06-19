@@ -6,27 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <title>Feature demo</title>
 	<script src="../../../../Build/Cesium/Cesium.js"></script>
-	<script type="text/javascript" src="menus.js"></script>
-	<script type="text/javascript" src="cesiumFunctions.js"></script>
+    <script src="cesiumFunctions.js"></script>
+    <script src="instanceManager.js"></script>
 </head>
 <body>
 <style>
-    @import url(demoStyles.css);
+    @import url(index.css);
 </style>
-
-<div id="toolbar" class="toolbar">
-	<h2>Features:<br></h2>
-	
+<div id="Cesium">
+    <div id="sideToolbar" class="overlay">
+        <button title="Add Cesium Instance" id="0" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/plus.svg">
+        </button>
+        <button title="Remove Cesium Instance" id="1" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/minus.svg">
+        </button>
+        <button title="Get Rectangle Coordinates" id="2" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/globe.svg">
+        </button>
+        <button title="Zoom on Rectangle" id="3" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/zoom.svg">
+        </button>
+        <button title="Zoom to fit Globe" id="4" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/zoomFit.svg">
+        </button>
+        <button title="Bookmark View" id="5" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/bookmark.svg">
+        </button>
+    </div>
+    <div id="topToolbar" class="overlay">
+        <button title="Edit" id="6" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/edit.svg">
+        </button>
+        <button title="Draw Rectangle" id="7" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/rectangle.svg">
+        </button>
+        <button title="Draw Circle" id="8" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/circle.svg">
+        </button>
+        <button title="Draw Polygon" id="9" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/polygon.svg">
+        </button>
+        <button title="Draw Polyline" id="10" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/polyline.svg">
+        </button>
+        <button title="Set a Pin" id="11" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/pin.svg">
+        </button>
+        <button title="Display Coordinates" id="12" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/coordinates.svg">
+        </button>
+    </div>
+    <div id="browser" class="overlay"></div>
+    <div id="cesiumInstances"></div>
 </div>
-<div id="title" class="title">
-	<h1>Cesiumjs Interactive Feature Demo</h1>
-</div>
 
-<div id="Cesium" class="Cesium"></div>
-
-<script id="Cesium demo">
-	var temp = menus.addAll('toolbar');
-	//console.log(menus)
+<script id="startup">
+    var manager = new instanceManager();
+    function handleInput(id) {
+        manager.inputHandler(id);
+    }
 </script>
+
 </body>
 </html>
