@@ -14,7 +14,7 @@
 
 	window.menus = {
 		returnViewer : function () {
-			return cesiumInstances[0].returnViewer();
+			return cesiumInstances[0];
 		},
 		test : function () {
 			console.log("Called script");

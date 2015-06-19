@@ -66,7 +66,7 @@ function cesiumFunctions(id) {
 	}, Cesium.ScreenSpaceEventType.MIDDLE_CLICK);
 
 	handler.setInputAction(function (pos) {
-
+		zoomOnRectangle();
 	}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
 	this.changeStyle = function (Source, Style) {
@@ -987,7 +987,37 @@ function cesiumFunctions(id) {
 
 	};
 
-	this.zoomOnRectangle = function() {
+	//User draws a rectangle, function returns an array in the format of: [[Array of datasources], [array of [entities]]
+	this.listEntitiesInArea = function() {
+	    drawRectangle(false, function(rectangle) {
+	        generateList(rectangle);
+	    });
+	    function generateList(rectangle) {
+	        var dataSources = [];
+	        var entities = [];
+	        var dataSourceList = 0;
+	        var dataSourceCollection = viewer.dataSources;
+	        for(var dataSourcesIndex = 0; dataSourcesIndex < dataSourceCollection.length; dataSourcesIndex++) {
+	            var entityCollection = dataSourceCollection.get(dataSourcesIndex).entities;
+	            for(var entitiesIndex = 0; entitiesIndex < entityCollection.values.length; entitiesIndex++) {
+	                var cartographic = getEntityPosition(entityCollection.values[entitiesIndex]);
+	                if(Cesium.Rectangle.contains(rectangle, cartographic)) {
+	                    if(dataSources.indexOf(dataSourceCollection.get(dataSourcesIndex)) === -1) {
+	                        console.log("New source");
+	                        dataSources[dataSourceList] = dataSourceCollection.get(dataSourcesIndex);
+	                        entities[dataSourceList] = [];
+	                        dataSourceList++;
+	                    }
+	                    entities[dataSourceList-1].push(entityCollection.values[entitiesIndex]);
+	                }
+	            }
+	        }
+	        console.log(dataSources);
+	        console.log(entities);
+	    }
+	};
+
+	var zoomOnRectangle = this.zoomOnRectangle = function() {
 	    drawRectangle(false, function(rectangle) {
 	        viewer.camera.viewRectangle(rectangle);
 	    });
@@ -999,6 +1029,41 @@ function cesiumFunctions(id) {
 	 * Private from here downward.
 	 *
 	*/
+
+	//Given an entity, returns the cartographic position.
+	var getEntityPosition = function(entity) {
+	    var positionProperties = ["corridor", "polygon", "polyline", "polylineVolume", "rectangle", "wall"];
+	    var time = viewer.clock.currentTime;
+	    if(Cesium.defined(entity.position)) {
+	        //console.log("Using entity.position");
+            return viewer.scene.globe.ellipsoid.cartesianToCartographic(entity.position.getValue(time));
+        } else {
+            //find the property with a position, process the position, and return a value.
+            for(var propertyNameIndex = 0; propertyNameIndex < positionProperties.length; propertyNameIndex++) {
+                var property = positionProperties[propertyNameIndex];
+                if(Cesium.defined(entity[property])) {
+                    //console.log("Using " + property);
+                    var rectangle;
+                    var positions;
+                    if(property === "rectangle") {
+                        rectangle = entity[property].coordinates.getValue(time);
+                        return Cesium.Rectangle.center(rectangle, new Cesium.Cartographic());
+                    } else if(property === "polygon") {
+                       var hierarchy = entity[property].hierarchy.getValue(time);
+                       positions = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(hierarchy.positions);
+                       rectangle = Cesium.Rectangle.fromCartographicArray(positions);
+                       return Cesium.Rectangle.center(rectangle, new Cesium.Cartographic());
+                    } else {
+                        //process positions property.array of cartesian3
+                        positions = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entity[property].positions.getValue(time));
+                        rectangle = Cesium.Rectangle.fromCartographicArray(positions);
+                        return Cesium.Rectangle.center(rectangle, new Cesium.Cartographic());
+                    }
+                }
+            }
+        }
+	};
+
 	//entityProperties contains an entity and a position. Entity is used to find the position of the reference frame,
 	//and the optional position Cartesian3 is used for the initial offset when tracking an entity.
 	var viewEntity = function (entityProperties, duration, mode, callback) {
