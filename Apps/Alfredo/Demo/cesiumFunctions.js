@@ -66,8 +66,7 @@ function cesiumFunctions(id) {
 	}, Cesium.ScreenSpaceEventType.MIDDLE_CLICK);
 
 	handler.setInputAction(function (pos) {
-		console.log(viewer.camera.position);
-		console.log(viewer.camera.positionWC);
+
 	}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
 	this.changeStyle = function (Source, Style) {
@@ -988,6 +987,12 @@ function cesiumFunctions(id) {
 
 	};
 
+	this.zoomOnRectangle = function() {
+	    drawRectangle(false, function(rectangle) {
+	        viewer.camera.viewRectangle(rectangle);
+	    });
+	};
+
 
 	/*
 	 *
@@ -1260,7 +1265,7 @@ function cesiumFunctions(id) {
                             coordinates : new Cesium.CallbackProperty(function() {
                                 return Cesium.Rectangle.fromCartographicArray(cartographicPoints);
                             }, false),
-                            material : Cesium.Color.RED.withAlpha(0.5)
+                            material : Cesium.Color.DARKGRAY.withAlpha(0.5)
                         }
                     });
                     firstPass = false;
