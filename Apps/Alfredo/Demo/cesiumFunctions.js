@@ -1157,9 +1157,11 @@ function cesiumFunctions(id) {
                 if (entityType === "polygon" && Cesium.defined(entityProperties.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions)) {
                     result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity.polygon.hierarchy.getValue(viewer.clock.currentTime).positions);
                     i = 20;
-                } else if (Cesium.defined(entityProperties.entity[entityType].positions)) {
-                    result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity[entityType].positions);
-                    i = 20;
+                } else if (Cesium.defined(entityProperties.entity[entityType])) {
+					if(Cesium.defined(entityProperties.entity[entityType].positions)) {
+						result = viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(entityProperties.entity[entityType].positions);
+						i = 20;
+					}
                 }
             }
             var boundingRectangle = Cesium.Rectangle.fromCartographicArray(result);

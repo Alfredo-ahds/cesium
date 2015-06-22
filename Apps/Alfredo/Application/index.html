@@ -14,6 +14,7 @@
     @import url(index.css);
 </style>
 <div id="Cesium">
+    <!--All icons were downloaded from iconmonstr.com-->
     <div id="sideToolbar" class="overlay">
         <button title="Add Cesium Instance" id="0" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
             <img width="40" height="40" src="Resources/plus.svg">
@@ -21,7 +22,7 @@
         <button title="Remove Cesium Instance" id="1" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
             <img width="40" height="40" src="Resources/minus.svg">
         </button>
-        <button title="Get Rectangle Coordinates" id="2" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+        <button title="Change scene mode" id="2" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
             <img width="40" height="40" src="Resources/globe.svg">
         </button>
         <button title="Zoom on Rectangle" id="3" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
@@ -56,15 +57,35 @@
         <button title="Display Coordinates" id="12" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
             <img width="40" height="40" src="Resources/coordinates.svg">
         </button>
+        <button title="Clear globe" id="13" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
+            <img width="40" height="40" src="Resources/trash.svg">
+        </button>
     </div>
-    <div id="browser" class="overlay"></div>
+    <div id="hideBrowser">
+        <button title="hide" class="cesium-button cesium-toolbar-button" onclick="toggleBrowser()" type="button">
+            <img width="40" height="40" src="Resources/undo.svg">
+        </button></div>
+    <div id="browser" class="browserVisible browserInvisible"></div>
     <div id="cesiumInstances"></div>
 </div>
 
 <script id="startup">
+
+    var browserVisible = true;
+
     var manager = new instanceManager();
     function handleInput(id) {
         manager.inputHandler(id);
+    }
+    function toggleBrowser() {
+        browserVisible = !browserVisible;
+        if(browserVisible) {
+            document.getElementById("browser").className = "browserVisible browserInvisible";
+            document.getElementById("hideBrowser").className = "";
+        } else {
+            document.getElementById("browser").className = "browserInvisible";
+            document.getElementById("hideBrowser").className = "browserInvisibleButton";
+        }
     }
 </script>
 
