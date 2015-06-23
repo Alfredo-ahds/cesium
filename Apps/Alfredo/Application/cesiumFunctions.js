@@ -70,60 +70,172 @@ function cesiumFunctions() {
         return properties;
     };
 
-    var drawPolygon = this.drawPolygon = function(viewer, keepPolygon, callback) {
-
+    //uses a hiearchy argument to draw a polygon. The easiest way to obtain a hiearchy is
+    //to use the drawPolyline function, discard the outline, and use the callback to pass
+    //the collection of points.
+    var drawPolygon = this.drawPolygon = function(viewer, hiearchy, callback) {
+        viewer.entities.add({
+            polygon : {
+                hierarchy : hiearchy,
+                material : Cesium.Color.RED.withAlpha(0.5)
+            }
+        });
     };
 
+    //draws a multi segment polyline. The callback function returns a hiearchy that is used
+    //to draw polygons.
     var drawPolyline = this.drawPolyline = function(viewer, keepPolyline, callback) {
+        var hierarchy = new Cesium.PolygonHierarchy();
+        var points = [];
+        var pointNumber = 0;
+        var mousePos;
+        var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
+        var lineString = viewer.entities.add({
+            polyline : {
+                positions : new Cesium.CallbackProperty(function() {
+                    return points;
+                }, false)
+            }
+        });
+
+        eventHandler.setInputAction(function (movement) {
+            var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
+            if (cartesian) {
+                points[pointNumber] = cartesian;
+            }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+        eventHandler.setInputAction(function (movement) {
+            mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
+            if (mousePos) {
+                pointNumber++;
+                points[pointNumber - 1] = mousePos;
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+        eventHandler.setInputAction(function () {
+            console.log("Finished");
+            eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+            eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+            hierarchy.positions = points;
+            if(!keepPolyline) {
+                viewer.entities.remove(lineString);
+            }
+            if(Cesium.defined(callback)) {
+                callback(hierarchy);
+            }
+        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
     };
 
     var addPlacemark = this.addPlacemark = function(viewer, keepPlacemark, callback) {
-
+        var eventHandler = new Cesium.ScreenSpaceEventHandler();
+        eventHandler.setInputAction(function(movement) {
+            var mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
+            if(mousePos) {
+                var pin = new Cesium.PinBuilder();
+                viewer.entities.add({
+                    name: "Pin",
+                    position : mousePos,
+                    billboard : {
+                        image: pin.fromColor(Cesium.Color.DARKGRAY.withAlpha(0.5), 48).toDataURL(),
+                        verticalOrigin : Cesium.VerticalOrigin.BOTTOM
+                    }
+                });
+                eventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     };
 
+    //creates an array of entities representing a grid of the lat/long lines. labels are also generated
+    //at significant points. If the grid exists, remove it.
     var displayCoords = this.displayCoords = function(viewer, callback) {
-        var entityCollection = viewer.entities;
-        var latLines = [];
-        var longLines = [];
-        var latitudeIndex;
-        var longitudeIndex;
-        var toDraw;
-        var index = 0;
 
-        //Generates points along the ellipsoid in the form of var[latIndex[points]]
-        for(latitudeIndex = -90; latitudeIndex <= 90; latitudeIndex+=10) {
-            latLines[index] = [];
+        var gridExists = false;
+        for(var i = 0; i < viewer.entities.values.length; i++) {
+            if(viewer.entities.values[i].name === "grid") {
+                gridExists = true;
+                i = viewer.entities.values.length;
+            }
+        }
+
+        if(!gridExists) {
+            var entityCollection = viewer.entities;
+            var latLines = [];
+            var longLines = [];
+            var latitudeIndex;
+            var longitudeIndex;
+            var toDraw;
+            var index = 0;
+
+            //Generates points along the ellipsoid in the form of var[latIndex[points]]
+            for(latitudeIndex = -90; latitudeIndex <= 90; latitudeIndex+=10) {
+                latLines[index] = [];
+                for(longitudeIndex = -180; longitudeIndex <= 180; longitudeIndex+=10) {
+                    latLines[index].push(new Cesium.Cartographic(Cesium.Math.toRadians(longitudeIndex), Cesium.Math.toRadians(latitudeIndex), 10));
+                }
+                index++;
+            }
+            index = 0;
             for(longitudeIndex = -180; longitudeIndex <= 180; longitudeIndex+=10) {
-                latLines[index].push(new Cesium.Cartographic(Cesium.Math.toRadians(longitudeIndex), Cesium.Math.toRadians(latitudeIndex), 10));
-            }
-            index++;
-        }
-        index = 0;
-        for(longitudeIndex = -180; longitudeIndex < 180; longitudeIndex+=10) {
-            longLines[index] = [];
-            for(latitudeIndex = -90; latitudeIndex < 90; latitudeIndex+=10) {
-                longLines[index].push(new Cesium.Cartographic(Cesium.Math.toRadians(longitudeIndex), Cesium.Math.toRadians(latitudeIndex), 10));
-            }
-            index++;
-        }
-        console.log(latLines);
-        for(var latDrawIndex = 0; latDrawIndex < latLines.length; latDrawIndex++) {
-            toDraw = viewer.scene.globe.ellipsoid.cartographicArrayToCartesianArray(latLines[latDrawIndex]);
-            entityCollection.add({
-                polyline: {
-                    positions : toDraw
+                longLines[index] = [];
+                for(latitudeIndex = -90; latitudeIndex <= 90; latitudeIndex+=10) {
+                    longLines[index].push(new Cesium.Cartographic(Cesium.Math.toRadians(longitudeIndex), Cesium.Math.toRadians(latitudeIndex), 10));
                 }
-            });
-        }
-        for(var longDrawIndex = 0; longDrawIndex < longLines.length; longDrawIndex++) {
-            toDraw = viewer.scene.globe.ellipsoid.cartographicArrayToCartesianArray(longLines[longDrawIndex]);
-            entityCollection.add({
-                polyline: {
-                    positions : toDraw
+                index++;
+            }
+            //console.log(latLines);
+            for(var latDrawIndex = 0; latDrawIndex < latLines.length; latDrawIndex++) {
+                toDraw = viewer.scene.globe.ellipsoid.cartographicArrayToCartesianArray(latLines[latDrawIndex]);
+                entityCollection.add({
+                    name : "grid",
+                    polyline: {
+                        positions : toDraw
+                    }
+                });
+            }
+            for(var longDrawIndex = 0; longDrawIndex < longLines.length; longDrawIndex++) {
+                toDraw = viewer.scene.globe.ellipsoid.cartographicArrayToCartesianArray(longLines[longDrawIndex]);
+                entityCollection.add({
+                    name : "grid",
+                    polyline: {
+                        positions : toDraw
+                    }
+                });
+            }
+            //create labels for each line, latitude/longitude
+            for(var latLabelsIndex = -90; latLabelsIndex <= 90; latLabelsIndex+=10) {
+                entityCollection.add({
+                    name : "grid",
+                    label : {
+                        text : "" + latLabelsIndex,
+                        scale : 0.5,
+                        eyeOffset : new Cesium.Cartesian3(200000, 200000, 0)
+                    },
+                    position : new Cesium.Cartesian3.fromDegrees(0, latLabelsIndex)
+                });
+            }
+            for(var longLabelsIndex = -180; longLabelsIndex <= 180; longLabelsIndex+=10) {
+                entityCollection.add({
+                    name : "grid",
+                    label : {
+                        text : "" + longLabelsIndex,
+                        scale : 0.5,
+                        eyeOffset : new Cesium.Cartesian3(200000, 200000, 0)
+                    },
+                    position : new Cesium.Cartesian3.fromDegrees(longLabelsIndex, 0)
+                });
+            }
+        } else {
+            var entities = viewer.entities.values;
+            for(var entitiesIndex = entities.length - 1; entitiesIndex >= 0; entitiesIndex--) {
+                if(entities[entitiesIndex].name === "grid") {
+                    viewer.entities.remove(entities[entitiesIndex]);
                 }
-            });
+            }
         }
+
     };
 
     //Uses mouse input to draw a circle on the globe. Uses an ellipsoid with the major and

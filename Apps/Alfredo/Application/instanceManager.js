@@ -13,7 +13,7 @@ function instanceManager() {
      * 6: Edit shapes
      * 7: Draw rectangle
      */
-
+ 
     //Holds each viewer instance, the index of the last added instance, and
     //the percentage of the display that each instance uses.
     var cesiumInstances = [];
@@ -114,6 +114,20 @@ function instanceManager() {
         case "8":
             console.log("Draw circle");
             operations.drawCircle(cesiumInstances[activeInstance], true);
+        break;
+        case "9":
+            console.log("Draw polygon");
+            operations.drawPolyline(cesiumInstances[activeInstance], false, function(hiearchy){
+                operations.drawPolygon(cesiumInstances[activeInstance], hiearchy);
+            });
+        break;
+        case "10":
+            console.log("Draw polyline");
+            operations.drawPolyline(cesiumInstances[activeInstance], true);
+        break;
+        case "11":
+            console.log("Place a pin");
+            operations.addPlacemark(cesiumInstances[activeInstance], true);
         break;
         case "12":
             console.log("Adding coordinates grid");

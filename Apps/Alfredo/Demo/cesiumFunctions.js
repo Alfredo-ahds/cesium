@@ -4,13 +4,23 @@ function cesiumFunctions(id) {
     /*jshint validthis:true */
     /*global Cesium, console */
 
+    //Day and night styles are the constant colors found in the ceos-cove application.
 	var DayStyles = [0xBB0000FF, 0xBBFFFF00, 0xBB00FF00, 0xBB00FFFF, 0xBBFFFFFF];
 	var NightStyles = [0xBB0000B4, 0xBBB4B400, 0xBB00B400, 0xBB00B4B4, 0xBBB4B4B4];
+
+	//keeps track of the loaded kml files and the data source objects associated with them.
 	var isLoaded = [false, false, false, false, false, false, false, false, false, false];
 	var kmlsLoaded = [];
+
+	//controls the visibility of the data sources and overlays.
 	var visible = [false, false, false, false, false, false, false, false, false, false];
 	var overlayActive = false;
+
+	//used for the revamped entity view.
 	var tracking = false;
+
+	//various initialization variables, drawtype for the default datasource objects,
+	//mode for the initial 3D view, and the screen overlay is not being shown.
 	var drawType = 'polygon';
 	var mode = 0;
 	var objectsLoaded = 0;
@@ -28,16 +38,19 @@ function cesiumFunctions(id) {
 			targetFrameRate : 60
 		});
 
+	//increases cache size to reduce loading after initialization with a framerate
+	//monitor.
 	viewer.scene.globe.tileCacheSize = 1000;
 	viewer.scene.debugShowFramesPerSecond = true;
+
 	var dataSources = viewer.dataSources;
 
 	//viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
-
 	setTimeout(function () {
-		viewer.container.getElementsByClassName("cesium-performanceDisplay")[0].style.top = '90%';
-	}, 2000);
+        viewer.container.getElementsByClassName("cesium-performanceDisplay")[0].style.top = '90%';
+    }, 2000);
 
+	//various event handlers for getting information from the viewer.
 	var handler = viewer.screenSpaceEventHandler;
 	/*handler.setInputAction(function(pos) {
 	console.log("Left double click");
@@ -69,6 +82,8 @@ function cesiumFunctions(id) {
 		zoomOnRectangle();
 	}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
+	//simple function requiring a source and style number. Finds the drawtype of the
+	//datasource and changes the style to one of the colors in day/night styles.
 	this.changeStyle = function (Source, Style) {
 		console.log("Starting to change color.");
 		if (!isLoaded[Source]) {
@@ -79,6 +94,7 @@ function cesiumFunctions(id) {
 		}
 	};
 
+	//toggles the show property of every entity in a data source.
 	this.toggleEnable = function (Source) {
 		console.log("Toggle Enable");
 		if (!isLoaded[Source]) {
@@ -89,6 +105,8 @@ function cesiumFunctions(id) {
 		}
 	};
 
+	//Responsible for the loading and unloading of datasources. Since this is asynchronous,
+	//a callback is provided.
 	this.manageSources = function (Source, callback) {
 		if (!isLoaded[Source]) {
 			isLoaded[Source] = !isLoaded[Source];
@@ -115,6 +133,7 @@ function cesiumFunctions(id) {
 		visible[Source] = !visible[Source];
 	};
 
+	//makes use of flyToPos to fly to an entity in a specified data source.
 	this.flyToEntity = function (Source, Entity) {
 		var sourceNumber = document.getElementById(Source).value;
 		var entityNumber = document.getElementById(Entity).value;
@@ -135,6 +154,7 @@ function cesiumFunctions(id) {
 		}
 	};
 
+	//toggles the imagery layer overlays.
 	this.toggleOverlays = function () {
 		var layers = viewer.scene.imageryLayers;
 		var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
@@ -178,6 +198,7 @@ function cesiumFunctions(id) {
 		overlayActive = !overlayActive;
 	};
 
+	//Takes the coordinates for a rectangle and a picture to fill the rectangle with.
 	this.loadOverlay = function (latStart, longStart, latEnd, longEnd, picSource) {
 		var lat1 = document.getElementById(latStart).value;
 		var long1 = document.getElementById(longStart).value;
@@ -203,10 +224,14 @@ function cesiumFunctions(id) {
 		return viewer;
 	};
 
+	//draws a rectangle using user mouse input. The rectangle is continuously generated
+	//as the mouse position changes after the first click.
 	this.drawRectangle = function () {
 	    drawRectangle(true);
     };
 
+    //Essentially follows the same pattern as drawRectangle, where the user will draw the
+    //outline of a polyline and when completed the points will be used to draw a polygon.
 	this.drawPolygon = function () {
 		drawPolygon(false, function(hierarchy) {
 		    viewer.entities.add({
@@ -218,6 +243,7 @@ function cesiumFunctions(id) {
 		});
 	};
 
+	//Removes and clears all entities, datasources, and overlays.
 	this.clearGlobe = function () {
 		console.log(viewer.entities.values.length);
 		viewer.entities.removeAll();
@@ -228,6 +254,7 @@ function cesiumFunctions(id) {
 		visible = [false, false, false, false, false, false, false, false, false, false];
 	};
 
+	//used to transition between 3D, 2D, and Columbus view.
 	this.toggleMode = function () {
 		mode = (mode + 1) % 3;
 		var scene = viewer.scene;
@@ -246,6 +273,7 @@ function cesiumFunctions(id) {
 		}
 	};
 
+	//Simple touring functionality much like that of the usgs portion of the cove site.
 	this.tour = function () {
 		var index = 0;
 		var prevColor;
@@ -309,6 +337,7 @@ function cesiumFunctions(id) {
 			}
 		};
 	};
+
 
 	this.improvedTour = function () {
 		var index = 1;
@@ -398,6 +427,9 @@ function cesiumFunctions(id) {
 		}
 	};
 
+	//Generates an animated satellite given a datasource. The satellite information
+	//is processed from the .kml input, including time and position data.
+	//A 3D model is used to mark the position of the satellite.
 	this.generateAnimation = function (Source) {
 		var months = {
 			JAN : "01",
@@ -584,6 +616,8 @@ function cesiumFunctions(id) {
 		console.log("Done");
 	};
 
+	//A basic html based screen overlay. The information is inserted into
+	//the same div that holds the viewer instance.
 	this.screenOverlay = function () {
 		if (!screenOverlayShown) {
 			var container = viewer.container;
@@ -629,6 +663,11 @@ function cesiumFunctions(id) {
 		screenOverlayShown = !screenOverlayShown;
 	};
 
+	//An example of data that changes with respect to time. Primitives are used and
+	//updated as each new scene becomes available. Entities are not used due to
+	//performance limitations. This example shows the interpolation of both
+	//the extruded height and the color of the rectangles. There is a weird
+	//visual artifact in each rectangle which relates to the use of prims.
 	this.timeDynamicData = function () {
 		var timeStart = Cesium.JulianDate.fromIso8601("2014-06-02T00:00:30Z");
 		var timeEnd = Cesium.JulianDate.fromIso8601("2015-06-02T00:00:30Z");
@@ -756,6 +795,8 @@ function cesiumFunctions(id) {
 		});
 	};
 
+	//A static version of the time dynamic data example. The polygons are
+	//extruded from the surface according to their numeric properties.
 	this.dataVisualization = function () {
 		Cesium.KmlDataSource.load("../Resources/precipitation.kmz").then(function (dataSource) {
 			console.log(dataSource.entities.values.length);
@@ -795,6 +836,8 @@ function cesiumFunctions(id) {
 		});
 	};
 
+	//Using the currently loaded datasources, generates coverage heatmap of all
+	//the swaths. Useful to see gaps in coverage or frequency data.
 	this.heatmapGen = function () {
 		var count = 0;
 		var rectangles = [];
@@ -911,13 +954,20 @@ function cesiumFunctions(id) {
 		console.log(coverage);
 	};
 
-	this.flyToPos = function (target, duration, callback) {
+	//Main rewrite of the flyTo behaviors. Interpolates a camera path based on
+	//cartographic coordinates, so the ellipsoid is automatically taken into
+	//consideration, removing all the odd clipping/moving through the globe issues
+	//Simce camera position is still a cartesian, A midpoint is used in the
+	//interpolation to reduce the chances of the camera moving through the globe.
+	//Cartographic is in degrees.
+	var flyToPos = this.flyToPos = function (target, duration, callback) {
 		console.log("Flying to position");
 		var latitude; var longitude; var altitude;
 		if (Cesium.defined(target.cartographic)) {
-			latitude = target.cartographic.latitude;
-			longitude = target.cartographic.longitude;
-			altitude = target.cartographic.height;
+		    //console.log(target.cartographic);
+			latitude = Cesium.Math.toDegrees(target.cartographic.latitude);
+			longitude = Cesium.Math.toDegrees(target.cartographic.longitude);
+			altitude = Cesium.Math.toDegrees(target.cartographic.height);
 		} else if (Cesium.defined(target.cartesian)) {
 			var cartographicPoint = viewer.scene.globe.ellipsoid.cartesianToCartographic(target.cartesian);
 			latitude = cartographicPoint.latitude;
@@ -938,17 +988,17 @@ function cesiumFunctions(id) {
 
 		}
 
-		var initial = viewer.camera.position;
+		var initial = viewer.camera.position.clone();
 		var destination = Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude);
 		var initialCartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(initial);
 
 		var timeInitial = viewer.clock.currentTime;
 		var timeMidpoint = Cesium.JulianDate.addSeconds(timeInitial, duration / 2, new Cesium.JulianDate());
 		var timeDestination = Cesium.JulianDate.addSeconds(timeInitial, duration, new Cesium.JulianDate());
-		console.log(timeMidpoint);
+		//console.log(timeMidpoint);
 
-		console.log(Cesium.Math.toDegrees(initialCartographic.longitude));
-		console.log(Cesium.Math.toDegrees(initialCartographic.latitude));
+		//console.log(Cesium.Math.toDegrees(initialCartographic.longitude));
+		//console.log(Cesium.Math.toDegrees(initialCartographic.latitude));
 		//console.log(initialCartographic.height);
 		var midAlt = initialCartographic.height + ((altitude - initialCartographic.height) / 2);
 		//console.log(midAlt);
@@ -956,12 +1006,12 @@ function cesiumFunctions(id) {
 		midpoint.addSample(timeInitial, Cesium.Math.toDegrees(initialCartographic.longitude));
 		midpoint.addSample(timeDestination, longitude);
 		var midLong = midpoint.getValue(timeMidpoint);
-		console.log(midLong);
+		//console.log(midLong);
 		midpoint = new Cesium.SampledProperty(Number);
 		midpoint.addSample(timeInitial, Cesium.Math.toDegrees(initialCartographic.latitude));
 		midpoint.addSample(timeDestination, latitude);
 		var midLat = midpoint.getValue(timeMidpoint);
-		console.log(midLat);
+		//console.log(midLat);
 		//var midpoint = Cesium.Cartographic.fromDegrees(midLong, midLat, midAlt);
 		midpoint = Cesium.Cartesian3.fromDegrees(midLong, midLat, midAlt);
 
@@ -988,6 +1038,7 @@ function cesiumFunctions(id) {
 	};
 
 	//User draws a rectangle, function returns an array in the format of: [[Array of datasources], [array of [entities]]
+	//Possible use case includes the browser functionality currently under development.
 	this.listEntitiesInArea = function() {
 	    drawRectangle(false, function(rectangle) {
 	        generateList(rectangle);
@@ -1017,6 +1068,29 @@ function cesiumFunctions(id) {
 	    }
 	};
 
+	//flyToPos target : {cartographic}, duration, callback,
+	this.cameraFlightTesting = function(i) {
+	    var toRadians = Cesium.Math.toRadians;
+	    //through the globe via 0 long.
+	    var destinations = [new Cesium.Cartographic(toRadians(0), toRadians(0), 250000), new Cesium.Cartographic(toRadians(180), toRadians(0), 250000),
+	    //via 0 lat
+	                        new Cesium.Cartographic(toRadians(0), toRadians(-90), 250000), new Cesium.Cartographic(toRadians(0), toRadians(90), 250000),
+	                        new Cesium.Cartographic(toRadians(175), toRadians(0), 250000), new Cesium.Cartographic(toRadians(-175), toRadians(0), 250000)];
+
+	    console.log(destinations[0]);
+	    console.log(destinations[1]);
+
+	    function cameraTest() {
+	        flyToPos({
+	            cartographic : destinations[i]
+	        }, 8);
+	    }
+
+	    cameraTest();
+
+	};
+
+	//gets a user drawn rectangle for the camera view.
 	var zoomOnRectangle = this.zoomOnRectangle = function() {
 	    drawRectangle(false, function(rectangle) {
 	        viewer.camera.viewRectangle(rectangle);
@@ -1412,8 +1486,4 @@ function cesiumFunctions(id) {
 			dataSource.entities.getById(dataSource.entities.values[i].id).show = value;
 		}
 	};
-
-	//If point is undefined, it will default to the default view with the globe as the central object.
-	//Will keep the same global camera position.
-	var changeCameraReferenceFrame = function (origin) {};
 }
