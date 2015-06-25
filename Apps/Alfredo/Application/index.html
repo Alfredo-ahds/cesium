@@ -1,93 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">  <!-- Use Chrome Frame in IE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-    <title>Feature demo</title>
-	<script src="../../../../Build/Cesium/Cesium.js"></script>
-    <script src="cesiumFunctions.js"></script>
-    <script src="instanceManager.js"></script>
+<meta content="text/html; charset=utf-8" http-equiv="content-type">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<!-- Use Chrome Frame in IE -->
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<title>Feature demo</title>
+<script src="../../../../Build/Cesium/Cesium.js" type="text/javascript"></script>
+<script src="cesiumFunctions.js" type="text/javascript"></script>
+<script src="instanceManager.js" type="text/javascript"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
-<style>
-    @import url(index.css);
+    <style type="text/css">
+@import url(index.css);
 </style>
-<div id="Cesium">
-    <!--All icons were downloaded from iconmonstr.com-->
-    <div id="sideToolbar" class="overlay">
-        <button title="Add Cesium Instance" id="0" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/plus.svg">
-        </button>
-        <button title="Remove Cesium Instance" id="1" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/minus.svg">
-        </button>
-        <button title="Change scene mode" id="2" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/globe.svg">
-        </button>
-        <button title="Zoom on Rectangle" id="3" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/zoom.svg">
-        </button>
-        <button title="Zoom to fit Globe" id="4" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/zoomFit.svg">
-        </button>
-        <button title="Bookmark View" id="5" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/bookmark.svg">
-        </button>
+    <div id="Cesium">
+        <div id="sideToolbar" class="overlay">
+            <button title="Add Cesium Instance" id="0"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/plus.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Remove Cesium Instance" id="1"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/minus.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Change scene mode" id="2"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/globe.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Zoom on Rectangle" id="3"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/zoom.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Zoom to fit Globe" id="4"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/zoomFit.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Bookmark View" id="5"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/bookmark.svg" height="40" width="40"
+                    alt="">
+            </button>
+        </div>
+        <div id="topToolbar" class="overlay">
+            <button title="Edit" id="6"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/edit.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Draw Rectangle" id="7"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/rectangle.svg" height="40"
+                    width="40" alt="">
+            </button>
+            <button title="Draw Circle" id="8"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/circle.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Draw Polygon" id="9"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/polygon.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Draw Polyline" id="10"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/polyline.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Set a Pin" id="11"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/pin.svg" height="40" width="40"
+                    alt="">
+            </button>
+            <button title="Display Coordinates" id="12"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/coordinates.svg" height="40"
+                    width="40" alt="">
+            </button>
+            <button title="Clear globe" id="13"
+                class="cesium-button cesium-toolbar-button"
+                onclick="handleInput(this.id)" type="button">
+                <img src="Resources/trash.svg" height="40" width="40"
+                    alt="">
+            </button>
+        </div>
+        <div id="hideBrowser">
+            <button title="hide"
+                class="cesium-button cesium-toolbar-button"
+                onclick="toggleBrowser()" type="button">
+                <img src="Resources/undo.svg" height="40" width="40"
+                    alt="">
+            </button>
+        </div>
+        <div style="text-align: center;" id="browser"
+            class="browserVisible browserInvisible">
+            <h1>Cesium Browser</h1>
+            <ul class="nav nav-tabs">
+                <li id="data" class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Data<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li id="sources" onclick=tabView(this.id)><a href="#">Sources</a></li>
+                    <li id="entities" onclick=tabView(this.id)><a href="#">Entities</a></li>                   
+                  </ul>
+                </li>
+                <li id="overlays" onclick=tabView(this.id)><a href="#">Overlays</a></li>
+                <li id="views" onclick=tabView(this.id)><a href="#">Views</a></li>
+                <li id="console" onclick=tabView(this.id)><a href="#">Console</a></li>
+              </ul>
+        </div>
     </div>
-    <div id="topToolbar" class="overlay">
-        <button title="Edit" id="6" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/edit.svg">
-        </button>
-        <button title="Draw Rectangle" id="7" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/rectangle.svg">
-        </button>
-        <button title="Draw Circle" id="8" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/circle.svg">
-        </button>
-        <button title="Draw Polygon" id="9" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/polygon.svg">
-        </button>
-        <button title="Draw Polyline" id="10" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/polyline.svg">
-        </button>
-        <button title="Set a Pin" id="11" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/pin.svg">
-        </button>
-        <button title="Display Coordinates" id="12" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/coordinates.svg">
-        </button>
-        <button title="Clear globe" id="13" class="cesium-button cesium-toolbar-button" onclick="handleInput(this.id)" type="button">
-            <img width="40" height="40" src="Resources/trash.svg">
-        </button>
-    </div>
-    <div id="hideBrowser">
-        <button title="hide" class="cesium-button cesium-toolbar-button" onclick="toggleBrowser()" type="button">
-            <img width="40" height="40" src="Resources/undo.svg">
-        </button></div>
-    <div id="browser" class="browserVisible browserInvisible"></div>
-    <div id="cesiumInstances"></div>
-</div>
-
-<script id="startup">
-
-    var browserVisible = true;
-
-    var manager = new instanceManager();
-    function handleInput(id) {
-        manager.inputHandler(id);
-    }
-    function toggleBrowser() {
-        browserVisible = !browserVisible;
-        if(browserVisible) {
-            document.getElementById("browser").className = "browserVisible browserInvisible";
-            document.getElementById("hideBrowser").className = "";
-        } else {
-            document.getElementById("browser").className = "browserInvisible";
-            document.getElementById("hideBrowser").className = "browserInvisibleButton";
+    <script id="startup" type="text/javascript">
+        var browserVisible = true;
+        
+        //Handles the styling of the tabs, as well as triggering the creation of static members of the 
+        //container. 
+        function tabView(id) {
+            var elementsByTagName = document.getElementsByTagName("li");
+            for(var elementsByTagNameIndex = 0; elementsByTagNameIndex < elementsByTagName.length; elementsByTagNameIndex++) {
+                elementsByTagName[elementsByTagNameIndex].className = "";
+            }
+            if(id === "sources" || id === "entities") {
+                document.getElementById("data").className += " active";
+            } else {
+                document.getElementById(id).className += " active";
+            }
+            generateStaticMenus(id);
         }
-    }
-</script>
-
+        //Creates the static parts of the tabbed menus, eg title, toolbar, etc.
+        function generateStaticMenus(id) {
+            switch(id) {
+            case "sources":
+                break;
+            case "entities":
+                break;
+            case "overlays":
+                break;
+            case "views":
+                break;
+            case "console":
+                break;
+            }
+        }
+        
+        //var manager = new instanceManager();
+        function handleInput(id) {
+            manager.inputHandler(id);
+        }
+        
+        //Hides or displays the browser window. 
+        function toggleBrowser() {
+            browserVisible = !browserVisible;
+            if (browserVisible) {
+                document.getElementById("browser").className = "browserVisible browserInvisible";
+                document.getElementById("hideBrowser").className = "";
+            } else {
+                document.getElementById("browser").className = "browserInvisible";
+                document.getElementById("hideBrowser").className = "browserInvisibleButton";
+            }
+        }
+    </script>
 </body>
 </html>

@@ -16,6 +16,10 @@ body {
     overflow: hidden;
 }
 
+a {
+    color: #333;
+}
+
 /*Holds the fullscreen application window, if there is
 more than one Cesium instance, this will be split accordingly
 the toolbars will remain constant relative to the main window
@@ -47,7 +51,7 @@ rather than the individual cesium instances.*/
 #browser {
     position: absolute;
     z-index: 1;
-    height: 600px;
+    height: 97%;
     width: 300px;
     right: 0%;
     
