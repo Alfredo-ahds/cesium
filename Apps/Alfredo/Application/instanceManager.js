@@ -13,7 +13,7 @@ function instanceManager() {
      * 6: Edit shapes
      * 7: Draw rectangle
      */
- 
+
     //Holds each viewer instance, the index of the last added instance, and
     //the percentage of the display that each instance uses.
     var cesiumInstances = [];
@@ -32,6 +32,10 @@ function instanceManager() {
     var instance = document.createElement('div');
     instance.id = "0";
     instance.className = "container";
+    instance.onclick = function() {
+      activeInstance = this.id;
+      console.log(this.id);
+    };
     container.appendChild(instance);
 
     Cesium.BingMapsApi.defaultKey = "Am-p7DPQRQdAQJhOI4yeuFnaNlgJkBjK3ZOJohluDm0Jr0sornY9zN-MQbB6jYeo";
@@ -56,6 +60,10 @@ function instanceManager() {
            instanceIndex++;
            instance.id = instanceIndex;
            instance.className = "container";
+           instance.onclick = function() {
+               activeInstance = this.id;
+               console.log(this.id);
+             };
            container.appendChild(instance);
            console.log(instanceIndex);
            cesiumInstances[instanceIndex] = new Cesium.Viewer(instance, {

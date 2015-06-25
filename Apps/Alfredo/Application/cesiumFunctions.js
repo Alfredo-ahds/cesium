@@ -130,7 +130,7 @@ function cesiumFunctions() {
     };
 
     var addPlacemark = this.addPlacemark = function(viewer, keepPlacemark, callback) {
-        var eventHandler = new Cesium.ScreenSpaceEventHandler();
+        var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         eventHandler.setInputAction(function(movement) {
             var mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
             if(mousePos) {
