@@ -48,6 +48,8 @@ function instanceManager() {
         homeButton : false
     });
 
+    operations.setOptions(cesiumInstances[0]);
+
     //Manages inputs by the button id, one case for every button/clickable
     //element. Uses functions in cesiumFunctions.js to modify the viewer
     //instances stored in cesiumInstances[].
@@ -73,6 +75,7 @@ function instanceManager() {
                navigationHelpButton : false,
                homeButton : false
            });
+           operations.setOptions(cesiumInstances[instanceIndex]);
            percentOfDisplay = (100 / container.children.length);
            for (var addIndex = 0; addIndex < container.children.length; addIndex++) {
                console.log("Modifying child " + addIndex);

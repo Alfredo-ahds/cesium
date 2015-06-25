@@ -5,15 +5,19 @@ function cesiumFunctions() {
 
     console.log("created");
 
+    this.setOptions = function(viewer) {
+      viewer.scene.primitives.destroyPrimitives = false;
+    };
+
     //Deletes all data related to the viewer, including primitives,
     //entities, overlays, drawn objects, and loaded imagery layers.
     this.clear = function(viewer) {
         viewer.scene.primitives.removeAll();
-        viewer.dataSources.removeAll(true);
+        viewer.dataSources.removeAll();
         viewer.entities.removeAll();
-        for(var layersIndex = 1; layersIndex < viewer.imageryLayers.length; layersIndex++) {
-            viewer.imageryLayers.remove(layersIndex);
-        }
+        //for(var layersIndex = 1; layersIndex < viewer.imageryLayers.length; layersIndex++) {
+        //    viewer.imageryLayers.remove(layersIndex);
+        //}
     };
 
     //Changes the scene mode(2D, 3D, Columbus) to the next increment. Does nothing
@@ -130,16 +134,16 @@ function cesiumFunctions() {
     };
 
     var addPlacemark = this.addPlacemark = function(viewer, keepPlacemark, callback) {
+        var i;
         var eventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         eventHandler.setInputAction(function(movement) {
             var mousePos = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
             if(mousePos) {
                 var pin = new Cesium.PinBuilder();
                 viewer.entities.add({
-                    name: "Pin",
                     position : mousePos,
                     billboard : {
-                        image: pin.fromColor(Cesium.Color.DARKGRAY.withAlpha(0.5), 48).toDataURL(),
+                        image: pin.fromColor(Cesium.Color.fromRandom().withAlpha(0.5), 48).toDataURL(),
                         verticalOrigin : Cesium.VerticalOrigin.BOTTOM
                     }
                 });
