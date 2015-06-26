@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>MODIS Land Cover</name>
+	<visibility>1</visibility>
+	<open>1</open>
+	<LookAt>
+		<longitude>-98</longitude>
+		<latitude>34</latitude>
+		<altitude>0</altitude>
+		<heading>0</heading>
+		<tilt>0</tilt>
+		<range>3500000</range>
+	</LookAt>
+	<Style>
+		<ListStyle>
+			<listItemType>check</listItemType>
+			<ItemIcon>
+				<state>open closed</state>
+				<href>http://ti.arc.nasa.gov/m/project/planetary/Icons/nasa16x16.png</href>
+			</ItemIcon>
+			<bgColor>00ffffff</bgColor>
+			<maxSnippetLines>2</maxSnippetLines>
+		</ListStyle>
+	</Style>
+	<Style id="infoHighlightState">
+		<IconStyle>
+			<scale>1.7</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/info-i.png</href>
+			</Icon>
+		</IconStyle>
+		<LabelStyle>
+			<scale>1.5</scale>
+		</LabelStyle>
+		<BalloonStyle>
+			<text>$[description]</text>
+		</BalloonStyle>
+	</Style>
+	<Style id="infoNormalState">
+		<IconStyle>
+			<scale>1.5</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/info-i.png</href>
+			</Icon>
+		</IconStyle>
+		<LabelStyle>
+			<color>00000000</color>
+		</LabelStyle>
+		<BalloonStyle>
+			<text>$[description]</text>
+		</BalloonStyle>
+	</Style>
+	<StyleMap id="infoStyle">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#infoNormalState</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#infoHighlightState</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark>
+		<name>Information</name>
+		<visibility>0</visibility>
+		<Snippet maxLines="0" maxlines="0"></Snippet>
+		<description><![CDATA[<table width="360" border="0" cellpadding="0" cellspacing="0">
+        <tr><td><img width="360" height="40" alt="Land Cover Classification" src="http://ti.arc.nasa.gov/m/project/planetary/Icons/lcc_title.png"></td></tr>
+        <tr><td width="360">
+	  <p><a href="http://earthobservatory.nasa.gov/Newsroom/LCC/"><img width="360" height="180" src="http://ti.arc.nasa.gov/m/project/planetary/Icons/lcc_browse.jpg"></a></p>
+	  <p><font size="+1"><b>Land Cover Classification Maps</b></font></p>
+	  <p>New NASA land cover maps provide scientists with the most refined global 
+	  picture ever produced of the distribution of Earth&rsquo;s ecosystems and land 
+	  use patterns. High-quality land cover maps aid scientists and policy makers 
+	  involved in natural resource management and a range of research and global 
+	  monitoring objectives.</p>
+	  <p>The land cover maps were developed at Boston University in Boston, Mass., 
+	  using data from the Moderate Resolution Imaging Spectroradiometer 
+	  (<A HREF="http://modis.gsfc.nasa.gov">MODIS</A>) instrument on NASA&rsquo;s <A HREF="http://terra.nasa.gov/">Terra</A>
+	  satellite. The maps are based on a digital database of Earth images collected between 
+	  November, 2000, and October, 2001.</p>
+	  <div align="right"><a href="http://earthobservatory.nasa.gov/Newsroom/LCC/">Read more...</a></div>
+          <hr>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="left" width="50%">&copy; NASA. All rights reserved.<br><a href="http://www.nasa.gov/">www.nasa.gov</a></td>
+              <td align="right" width="50%"><a href="http://ti.arc.nasa.gov/earth/">See more NASA imagery<br>for Google Earth.</a></td>
+            </tr>
+          </table>
+          <hr>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr><td align="center"><A HREF="http://www-modis.bu.edu/landcover/">Boston University</A></td></tr>
+            <tr><td align="center"><A HREF="http://earthobservatory.nasa.gov/">NASA Earth Observatory</A></td></tr>
+          </table>
+        </td></tr>
+      </table>]]></description>
+		<LookAt>
+			<longitude>-98</longitude>
+			<latitude>34</latitude>
+			<altitude>0</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<range>3500000</range>
+		</LookAt>
+		<styleUrl>#infoStyle</styleUrl>
+		<Point>
+			<coordinates>-97.99999999999999,34,0</coordinates>
+		</Point>
+	</Placemark>
+	<NetworkLink>
+		<Link>
+			<href>http://ti.arc.nasa.gov/m/project/planetary/kml/planetary_kml/LCC/gl_ll_sds01_v4/kml/0.kmz</href>
+		</Link>
+	</NetworkLink>
+	<ScreenOverlay>
+		<name>Legend</name>
+		<visibility>1</visibility>
+		<Icon>
+			<href>http://ti.arc.nasa.gov/m/project/planetary/Icons/lcc_legend.png</href>
+		</Icon>
+		<overlayXY x="1" y="0" xunits="fraction" yunits="fraction"/>
+		<screenXY x="25" y="100" xunits="insetPixels" yunits="pixels"/>
+		<rotationXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>
+		<size x="-1" y="-1" xunits="fraction" yunits="fraction"/>
+	</ScreenOverlay>
+</Document>
+</kml>

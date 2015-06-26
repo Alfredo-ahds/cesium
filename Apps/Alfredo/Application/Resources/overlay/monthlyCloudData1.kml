@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<Style id="theLabelStyle">
+			<color>00000000</color>
+			<IconStyle>
+				<Icon>	
+				</Icon>
+			</IconStyle>
+			<LabelStyle>
+				<color>ffffffff</color>
+				<scale>2.0</scale>
+			</LabelStyle>
+		</Style>
+		<Placemark>
+			<name>Geo Region</name>
+			<Style>
+				<LineStyle>
+					<color>00000000</color>
+					<width>1</width>
+				</LineStyle>
+				<PolyStyle>
+					<color>2dFFFFFF</color>
+				</PolyStyle>
+			</Style>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<coordinates>0,-87.5,0 0,-85,0 120,-85,0 120,-87.5,0 
+
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+			<ExtendedData>
+				<Data name="AvgCloudiness">
+				  <value>23%</value>
+				</Data>
+			</ExtendedData>
+		</Placemark>
+		<Placemark>
+			<name>23%</name>
+			<styleUrl>#theLabelStyle</styleUrl>
+			<Point>
+				<coordinates>60,-86.25	,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Geo Region</name>
+			<Style>
+				<LineStyle>
+					<color>00000000</color>
+					<width>1</width>
+				</LineStyle>
+				<PolyStyle>
+					<color>37FFFFFF</color>
+				</PolyStyle>
+			</Style>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<coordinates>120,-87.5,0 120,-85,0 240,-85,0 240,-87.5,0 
+
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+			<ExtendedData>
+				<Data name="AvgCloudiness">
+				  <value>29%</value>
+				</Data>
+			</ExtendedData>
+		</Placemark>
+		<Placemark>
+			<name>29%</name>
+			<styleUrl>#theLabelStyle</styleUrl>
+			<Point>
+				<coordinates>180,-86.25	,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Geo Region</name>
+			<Style>
+				<LineStyle>
+					<color>00000000</color>
+					<width>1</width>
+				</LineStyle>
+				<PolyStyle>
+					<color>3eFFFFFF</color>
+				</PolyStyle>
+			</Style>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<coordinates>-120,-87.5,0 -120,-85,0 0,-85,0 0,-87.5,0 </coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+			<ExtendedData>
+				<Data name="AvgCloudiness">
+				  <value>32%</value>
+				</Data>
+			</ExtendedData>
+		</Placemark>
+		<Placemark>
+			<name>32%</name>
+			<styleUrl>#theLabelStyle</styleUrl>
+			<Point>
+				<coordinates>-60,-86.25	,0</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>GlobCover Land Map</name>
+	<description>
+		Course rendering of the GlobCover land map.<br/>Source: <a href="http://ionia1.esrin.esa.int/">http://ionia1.esrin.esa.int/</a>
+		</description>
+	<visibility>1</visibility>
+	<open>1</open>
+	<GroundOverlay>
+		<visibility>1</visibility>
+		<Icon>
+			<href>GlobCover2009_northwest.png</href>
+		</Icon>
+		<LatLonBox>
+			<north>84</north>
+			<south>12.5</south>
+			<east>0</east>
+			<west>-180</west>
+		</LatLonBox>
+	</GroundOverlay>
+	<GroundOverlay>
+		<visibility>1</visibility>
+		<Icon>
+			<href>GlobCover2009_northeast.png</href>
+		</Icon>
+		<LatLonBox>
+			<north>84</north>
+			<south>12.5</south>
+			<east>180</east>
+			<west>0</west>
+		</LatLonBox>
+	</GroundOverlay>
+	<GroundOverlay>
+		<visibility>1</visibility>
+		<Icon>
+			<href>GlobCover2009_southeast.png</href>
+		</Icon>
+		<LatLonBox>
+			<north>12.5</north>
+			<south>-59</south>
+			<east>180</east>
+			<west>0</west>
+		</LatLonBox>
+	</GroundOverlay>
+	<GroundOverlay>
+		<visibility>1</visibility>
+		<Icon>
+			<href>GlobCover2009_southwest.png</href>
+		</Icon>
+		<LatLonBox>
+			<north>12.5</north>
+			<south>-59</south>
+			<east>0</east>
+			<west>-180</west>
+		</LatLonBox>
+	</GroundOverlay>
+</Document>
+</kml>
