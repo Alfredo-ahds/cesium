@@ -1072,18 +1072,19 @@ function cesiumFunctions(id) {
 	this.cameraFlightTesting = function(i) {
 	    var toRadians = Cesium.Math.toRadians;
 	    //through the globe via 0 long.
-	    var destinations = [new Cesium.Cartographic(toRadians(0), toRadians(0), 250000), new Cesium.Cartographic(toRadians(180), toRadians(0), 250000),
+	    var destinations = [new Cesium.Cartographic(toRadians(0), toRadians(0), 10000000), new Cesium.Cartographic(toRadians(180), toRadians(0), 5000000),
 	    //via 0 lat
-	                        new Cesium.Cartographic(toRadians(0), toRadians(-90), 250000), new Cesium.Cartographic(toRadians(0), toRadians(90), 250000),
-	                        new Cesium.Cartographic(toRadians(175), toRadians(0), 250000), new Cesium.Cartographic(toRadians(-175), toRadians(0), 250000)];
+	                        new Cesium.Cartographic(toRadians(0), toRadians(-90), 5000000), new Cesium.Cartographic(toRadians(0), toRadians(90), 5000000),
+	                        new Cesium.Cartographic(toRadians(175), toRadians(0), 5000000), new Cesium.Cartographic(toRadians(-175), toRadians(0), 5000000)];
 
-	    console.log(destinations[0]);
-	    console.log(destinations[1]);
 
 	    function cameraTest() {
-	        flyToPos({
+	        /*flyToPos({
 	            cartographic : destinations[i]
-	        }, 8);
+	        }, 8);*/
+	        viewer.camera.flyTo({
+	            destination : viewer.scene.globe.ellipsoid.cartographicToCartesian(destinations[i])
+	        });
 	    }
 
 	    cameraTest();

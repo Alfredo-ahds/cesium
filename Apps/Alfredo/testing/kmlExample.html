@@ -20,7 +20,7 @@
 <div id="cesiumContainer"></div>
 <script>
 function startup(Cesium) {
-	var viewer = new Cesium.Viewer("cesiumContainer", {
+	var viewer = new Cesium.Viewer("cesiumContainer"/*, {
 		animation : false,
 		baseLayerPicker : false,
 		fullscreenButton : false,
@@ -34,9 +34,9 @@ function startup(Cesium) {
 		globe : false,
 		skyBox : false,
 		skyAtmosphere : false
-	});
+	}*/);
 	
-	viewer.entities.add({
+	/*viewer.entities.add({
 		id : "sat",
 		position : new Cesium.Cartesian3(1, 1, 1),
 		model : {
@@ -46,7 +46,8 @@ function startup(Cesium) {
 		},
 	});
 	var transform = Cesium.Transforms.eastNorthUpToFixedFrame(new Cesium.Cartesian3(1, 1, 1));
-	viewer.camera.lookAtTransform(transform);
+	viewer.camera.lookAtTransform(transform);*/
+	viewer.dataSources.add(Cesium.KmlDataSource.load("../Resources/Cove overlays/globcover/globcover.kml"));
 }
 	
 if (typeof Cesium !== "undefined") {

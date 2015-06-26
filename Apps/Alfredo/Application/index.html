@@ -130,6 +130,7 @@
                 <li id="views" onclick=tabView(this.id)><a href="#">Views</a></li>
                 <li id="console" onclick=tabView(this.id)><a href="#">Console</a></li>
               </ul>
+            <div id="browserContainer"></div>
         </div>
     </div>
     <script id="startup" type="text/javascript">
@@ -151,8 +152,28 @@
         }
         //Creates the static parts of the tabbed menus, eg title, toolbar, etc.
         function generateStaticMenus(id) {
+            //placeholders for elements.
+            var container = document.getElementById("browserContainer");
+            var header;
+            var buttons;
+            var body;
+            var element;
+            //Clears the body container. 
+            container.innerHTML = "";
             switch(id) {
             case "sources":
+                header = document.createElement("h3");
+                header.innerHTML = "Data Sources";
+                container.appendChild(header);
+                body = document.createElement("div");
+                body.id = "sourcesBody";
+                body.style.textAlign = "left";
+                container.appendChild(body);
+                element = document.createElement("h4");
+                element.innerHTML = "Sources available: ";
+                body.appendChild(element);
+                //table for 
+                //buttons include: clear all sources. 
                 break;
             case "entities":
                 break;
