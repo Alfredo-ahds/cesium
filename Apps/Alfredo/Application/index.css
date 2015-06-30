@@ -20,6 +20,12 @@ a {
     color: #333;
 }
 
+td {
+    text-align: center;
+    height: 42px;
+}
+
+
 /*Holds the fullscreen application window, if there is
 more than one Cesium instance, this will be split accordingly
 the toolbars will remain constant relative to the main window
@@ -49,12 +55,12 @@ rather than the individual cesium instances.*/
 }
 
 #browser {
+    color: #FFFFFF;
     position: absolute;
     z-index: 1;
-    height: 97%;
+    height: 94%;
     width: 300px;
     right: 0%;
-    
 }
 
 #cesiumInstances {
@@ -73,7 +79,7 @@ rather than the individual cesium instances.*/
     right: 308px;
 }
 
-.container {
+.cesiumContainer {
     position: absolute;
     background: #000033;
     border: none;
@@ -166,4 +172,6 @@ rather than the individual cesium instances.*/
     opacity: 1;
     transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
+
+
 

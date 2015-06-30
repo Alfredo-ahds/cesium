@@ -10,9 +10,12 @@
 <script src="../../../../Build/Cesium/Cesium.js" type="text/javascript"></script>
 <script src="cesiumFunctions.js" type="text/javascript"></script>
 <script src="instanceManager.js" type="text/javascript"></script>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+    href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script
+    src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
     <style type="text/css">
@@ -23,185 +26,584 @@
             <button title="Add Cesium Instance" id="0"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/plus.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/plus.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Remove Cesium Instance" id="1"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/minus.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/minus.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Change scene mode" id="2"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/globe.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/globe.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Zoom on Rectangle" id="3"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/zoom.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/zoom.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Zoom to fit Globe" id="4"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/zoomFit.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/zoomFit.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Bookmark View" id="5"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/bookmark.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/bookmark.svg" alt="" height="40"
+                    width="40">
             </button>
         </div>
         <div id="topToolbar" class="overlay">
             <button title="Edit" id="6"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/edit.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/edit.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Draw Rectangle" id="7"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/rectangle.svg" height="40"
-                    width="40" alt="">
+                <img src="Resources/svg/rectangle.svg" alt=""
+                    height="40" width="40">
             </button>
             <button title="Draw Circle" id="8"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/circle.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/circle.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Draw Polygon" id="9"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/polygon.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/polygon.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Draw Polyline" id="10"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/polyline.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/polyline.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Set a Pin" id="11"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/pin.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/pin.svg" alt="" height="40"
+                    width="40">
             </button>
             <button title="Display Coordinates" id="12"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/coordinates.svg" height="40"
-                    width="40" alt="">
+                <img src="Resources/svg/coordinates.svg" alt=""
+                    height="40" width="40">
             </button>
             <button title="Clear globe" id="13"
                 class="cesium-button cesium-toolbar-button"
                 onclick="handleInput(this.id)" type="button">
-                <img src="Resources/trash.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/trash.svg" alt="" height="40"
+                    width="40">
             </button>
         </div>
         <div id="hideBrowser">
             <button title="hide"
                 class="cesium-button cesium-toolbar-button"
                 onclick="toggleBrowser()" type="button">
-                <img src="Resources/undo.svg" height="40" width="40"
-                    alt="">
+                <img src="Resources/svg/undo.svg" alt="" height="40"
+                    width="40">
             </button>
         </div>
-        <div style="text-align: center;" id="browser"
+        <div style="text-align: center" id="browser"
             class="browserVisible browserInvisible">
             <h1>Cesium Browser</h1>
             <ul class="nav nav-tabs">
-                <li id="data" class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Data<span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li id="sources" onclick=tabView(this.id)><a href="#">Sources</a></li>
-                    <li id="entities" onclick=tabView(this.id)><a href="#">Entities</a></li>                   
-                  </ul>
-                </li>
-                <li id="overlays" onclick=tabView(this.id)><a href="#">Overlays</a></li>
-                <li id="views" onclick=tabView(this.id)><a href="#">Views</a></li>
-                <li id="console" onclick=tabView(this.id)><a href="#">Console</a></li>
-              </ul>
-            <div id="browserContainer"></div>
+                <li id="data" class="dropdown"><a
+                    class="dropdown-toggle" data-toggle="dropdown"
+                    href="#">Data<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li id="sources" onclick="tabView(this.id)"><a
+                            href="#">Sources</a></li>
+                        <li id="entities" onclick="tabView(this.id)"><a
+                            href="#">Entities</a></li>
+                    </ul></li>
+                <li id="overlays" onclick="tabView(this.id)"><a
+                    href="#">Overlays</a></li>
+                <li id="views" onclick="tabView(this.id)"><a
+                    href="#">Views</a></li>
+                <li id="console" onclick="tabView(this.id)"><a
+                    href="#">Console</a></li>
+            </ul>
+            <div id="browserContainer" style="height: 100%;"></div>
         </div>
+        <div id="cesiumInstances"></div>
+    </div>
+
+    <div id="sourcesMenu">
+        <table style="width: 100%" border="1">
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>Anim</td>
+                    <td>Ground</td>
+                    <td>Nadir</td>
+                    <td>Actuals</td>
+                </tr>
+                <tr id="Aqua">
+                    <td>Aqua</td>
+                    <td><input name="anim" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="ground" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="nadir" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td></td>
+                </tr>
+                <tr id="Aura">
+                    <td>Aura</td>
+                    <td><input name="anim" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="ground" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="nadir" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td></td>
+                </tr>
+                <tr id="Calipso">
+                    <td>Calipso</td>
+                    <td><input name="anim" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="ground" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="nadir" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td></td>
+                </tr>
+                <tr id="Cloudsat">
+                    <td>Cloudsat</td>
+                    <td><input name="anim" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="ground" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="nadir" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td></td>
+                </tr>
+                <tr id="Landsat">
+                    <td>Landsat</td>
+                    <td></td>
+                    <td><input name="ground" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="nadir" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="actuals" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                </tr>
+                <tr id="Terra">
+                    <td>Terra</td>
+                    <td><input name="anim" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="ground" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td><input name="nadir" type="checkbox"
+                        onchange="toggleSourcesCheckbox(this)"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="overlayMenu">
+        <table style="width: 100%" border="1">
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>Enable</td>
+                    <td>3D View</td>
+                </tr>
+                <tr id="Black_Marble">
+                    <td>Black Marble</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Globcover">
+                    <td>Globcover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="MODIS">
+                    <td>MODIS Land Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="ASTER">
+                    <td>Aster Digital Elevation Model (Hi-Res)</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="ASTER_SMALL">
+                    <td>Aster Digital Elevation Model</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Landsat">
+                    <td>Landsat WRS2</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Sentinel-2">
+                    <td>Sentinel-2 Tiling Grid</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Revisit_1">
+                    <td>Revisit Performance (L8, S2A, S2B)</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Revisit_2">
+                    <td>Revisit Performance (L7, L8, S2A)</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Revisit_3">
+                    <td>Revisit Performance (L7, L8, S2A, S2B)</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud1">
+                    <td>1995-2009 Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud2">
+                    <td>January Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud3">
+                    <td>February Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud4">
+                    <td>March Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud5">
+                    <td>April Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud6">
+                    <td>May Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud7">
+                    <td>June Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud8">
+                    <td>July Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud9">
+                    <td>August Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud10">
+                    <td>September Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud11">
+                    <td>October Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud12">
+                    <td>November Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Cloud13">
+                    <td>December Average Cloud Cover</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation1">
+                    <td>1995-2009 Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation2">
+                    <td>January Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation3">
+                    <td>February Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation4">
+                    <td>March Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation5">
+                    <td>April Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation6">
+                    <td>May Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation7">
+                    <td>June Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation8">
+                    <td>July Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation9">
+                    <td>August Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation10">
+                    <td>September Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation11">
+                    <td>October Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation12">
+                    <td>November Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+                <tr id="Precipitation13">
+                    <td>December Average Precipitation</td>
+                    <td><input name="enable" type="checkbox"
+                        onchange="toggleOverlayCheckbox(this)"></td>
+                    <td><input name="3d" type="checkbox"
+                        onchange="toggle3dCheckbox(this)"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <script id="startup" type="text/javascript">
-        var browserVisible = true;
-        
-        //Handles the styling of the tabs, as well as triggering the creation of static members of the 
-        //container. 
-        function tabView(id) {
-            var elementsByTagName = document.getElementsByTagName("li");
-            for(var elementsByTagNameIndex = 0; elementsByTagNameIndex < elementsByTagName.length; elementsByTagNameIndex++) {
-                elementsByTagName[elementsByTagNameIndex].className = "";
-            }
-            if(id === "sources" || id === "entities") {
-                document.getElementById("data").className += " active";
-            } else {
-                document.getElementById(id).className += " active";
-            }
-            generateStaticMenus(id);
-        }
-        //Creates the static parts of the tabbed menus, eg title, toolbar, etc.
-        function generateStaticMenus(id) {
-            //placeholders for elements.
-            var container = document.getElementById("browserContainer");
-            var header;
-            var buttons;
-            var body;
-            var element;
-            //Clears the body container. 
-            container.innerHTML = "";
-            switch(id) {
-            case "sources":
-                header = document.createElement("h3");
-                header.innerHTML = "Data Sources";
-                container.appendChild(header);
-                body = document.createElement("div");
-                body.id = "sourcesBody";
-                body.style.textAlign = "left";
-                container.appendChild(body);
-                element = document.createElement("h4");
-                element.innerHTML = "Sources available: ";
-                body.appendChild(element);
-                //table for 
-                //buttons include: clear all sources. 
-                break;
-            case "entities":
-                break;
-            case "overlays":
-                break;
-            case "views":
-                break;
-            case "console":
-                break;
-            }
-        }
-        
-        //var manager = new instanceManager();
-        function handleInput(id) {
-            manager.inputHandler(id);
-        }
-        
-        //Hides or displays the browser window. 
-        function toggleBrowser() {
-            browserVisible = !browserVisible;
-            if (browserVisible) {
-                document.getElementById("browser").className = "browserVisible browserInvisible";
-                document.getElementById("hideBrowser").className = "";
-            } else {
-                document.getElementById("browser").className = "browserInvisible";
-                document.getElementById("hideBrowser").className = "browserInvisibleButton";
-            }
-        }
-    </script>
+                    var browserVisible = true;
+                    
+                    var manager = new instanceManager();
+                    function handleInput(id) {
+                        manager.inputHandler(id);
+                    }
+                    
+                    //Handles the input to all of the overlay checkboxes, enable/disable. 
+                    function toggleOverlayCheckbox(element) {
+                        console.log(element.parentNode.parentNode.id);
+                        var overlayId = element.parentNode.parentNode.id;
+                        var value = element.checked;
+                        manager.overlayManager(overlayId, value);
+                    }
+                    
+                    //Handles the 3D imagery input on the overlay section of the browser. 
+                    function toggle3dCheckbox(element) {
+                        var overlayId = element.parentNode.parentNode.id;
+                        var value = element.checked;
+                        if(element.parentNode.parentNode.children[1].children[0].checked) {
+                            console.log("checked")
+                            manager.toggle3D(overlayId, value); 
+                        }
+                    }
+
+                    //Hides or displays the browser window. 
+                    function toggleBrowser() {
+                        browserVisible = !browserVisible;
+                        if (browserVisible) {
+                            document.getElementById("browser").className = "browserVisible browserInvisible";
+                            document.getElementById("hideBrowser").className = "";
+                        } else {
+                            document.getElementById("browser").className = "browserInvisible";
+                            document.getElementById("hideBrowser").className = "browserInvisibleButton";
+                        }
+                    }
+                    
+                    //Source input management. 
+                    function toggleSourcesCheckbox(element) {
+                        //gets the name of the parent
+                        //console.log(element.parentNode.parentNode.id);
+                        var satId = element.parentNode.parentNode.id;
+                        //gets the operation to perform
+                        //console.log(element.name);
+                        var operation = element.name;
+                        //gets the current value of the checkbox. 
+                        var value = element.checked;
+                        manager.sourceManager(satId, operation, value);
+                    }
+
+                    //Handles the styling of the tabs, as well as triggering the creation of static members of the 
+                    //container. 
+                    function tabView(id) {
+                        var elementsByTagName = document.getElementsByTagName("li");
+                        for (var elementsByTagNameIndex = 0; elementsByTagNameIndex < elementsByTagName.length; elementsByTagNameIndex++) {
+                            elementsByTagName[elementsByTagNameIndex].className = "";
+                        }
+                        if (id === "sources" || id === "entities") {
+                            document.getElementById("data").className += " active";
+                        } else {
+                            document.getElementById(id).className += " active";
+                        }
+                        generateStaticMenus(id);
+                    }
+                    
+                    //Creates the static parts of the tabbed menus, eg title, toolbar, etc.
+                    function generateStaticMenus(id) {
+                        //placeholders for elements.
+                        var container = document.getElementById("browserContainer");
+                        var header;
+                        var buttons;
+                        var body;
+                        var element;
+                        //Clears the body container. 
+                        container.innerHTML = "";
+                        switch (id) {
+                        case "sources":
+                            header = document.createElement("h3");
+                            header.innerHTML = "Data Sources";
+                            container.appendChild(header);
+                            body = document.createElement("div");
+                            body.id = "sourcesBody";
+                            body.style.textAlign = "center";
+                            container.appendChild(body);
+                            element = document.createElement("h4");
+                            element.innerHTML = "Sources available: ";
+                            body.appendChild(element);
+                            body.appendChild(document.getElementById("sourcesMenu").cloneNode(true));
+                            body.appendChild(document.createElement("br"));
+                            //buttons include: clear all sources. 
+                            buttons = document.createElement("button");
+                            buttons.name = "Clear the globe";
+                            buttons.onclick = function() {
+                                var checkboxes = document.getElementsByTagName("input");
+                                for(var checkboxesIndex = 0; checkboxesIndex < checkboxes.length; checkboxesIndex++) {
+                                    checkboxes[checkboxesIndex].checked = false;
+                                }
+                                manager.inputHandler("13");
+                            }
+                            buttons.appendChild(document.createTextNode("Clear the globe"));
+                            body.appendChild(buttons);
+                            break;
+                        case "entities":
+                            break;
+                        case "overlays":
+                            header = document.createElement("h3");
+                            header.innerHTML = "Data Overlays";
+                            container.appendChild(header);
+                            body = document.createElement("div");
+                            body.id = "overlayBody";
+                            body.style.textAlign = "center";
+                            body.style.overflow = "scroll";
+                            body.style.maxHeight = "78%";
+                            body.style.overflowX = "hidden";
+                            container.appendChild(body);
+                            element = document.createElement("h4");
+                            element.innerHTML = "Overlays available: ";
+                            body.appendChild(element);
+                            //ins table. 
+                            body.appendChild(document.getElementById("overlayMenu").cloneNode(true));
+                            body.appendChild(document.createElement("br"));
+                            body
+                            //buttons to clear. 
+                            buttons = document.createElement("button");
+                            buttons.name = "Clear the globe";
+                            buttons.onclick = function() {
+                                var checkboxes = document.getElementsByTagName("input");
+                                for(var checkboxesIndex = 0; checkboxesIndex < checkboxes.length; checkboxesIndex++) {
+                                    checkboxes[checkboxesIndex].checked = false;
+                                }
+                                manager.inputHandler("13");
+                            }
+                            buttons.appendChild(document.createTextNode("Clear the globe"));
+                            body.appendChild(buttons);
+                            break;
+                        case "views":
+                            break;
+                        case "console":
+                            break;
+                        }
+                    }
+
+                    
+                </script>
 </body>
 </html>

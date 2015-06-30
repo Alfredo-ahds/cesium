@@ -31,10 +31,10 @@ function instanceManager() {
     var container = document.getElementById("cesiumInstances");
     var instance = document.createElement('div');
     instance.id = "0";
-    instance.className = "container";
+    instance.className = "cesiumContainer";
     instance.onclick = function() {
       activeInstance = this.id;
-      console.log(this.id);
+      //console.log(this.id);
     };
     container.appendChild(instance);
 
@@ -54,17 +54,17 @@ function instanceManager() {
     //element. Uses functions in cesiumFunctions.js to modify the viewer
     //instances stored in cesiumInstances[].
     this.inputHandler = function(id) {
-        console.log(id);
+        //console.log(id);
         switch(id) {
         case "0":
            console.log("Adding Cesium instance");
            instance = document.createElement('div');
            instanceIndex++;
            instance.id = instanceIndex;
-           instance.className = "container";
+           instance.className = "cesiumContainer";
            instance.onclick = function() {
                activeInstance = this.id;
-               console.log(this.id);
+               //console.log(this.id);
              };
            container.appendChild(instance);
            console.log(instanceIndex);
@@ -117,6 +117,7 @@ function instanceManager() {
             console.log("Selection tool");
             //TODO: Add features to the selection tool after all other drawing
             //features are complete.
+            operations.selectionTool(cesiumInstances[activeInstance]);
         break;
         case "7":
             console.log("Draw rectangle");
@@ -147,6 +148,86 @@ function instanceManager() {
         case "13":
             console.log("Clearing all data");
             operations.clear(cesiumInstances[activeInstance], true);
+        }
+    };
+
+    //Manages the various overlays available. This includes both Tile Map Services as well as
+    //kml based ground overlays.
+    this.overlayManager = function(overlayId, value) {
+        var myWindow;
+        var filePath = "Resources/overlay/";
+        //screen overlay
+        if(overlayId.indexOf("Revisit") > -1) {
+            if(value) {
+                myWindow = window.open("", "", "width=300, height=700");
+                myWindow.document.write("<img src=\"Resources/overlay/Revisit/revisit_overlay.png\" width=\"200\" height=\"600\">");
+                myWindow.document.body.style.background = "gray";
+            }
+            filePath += "Revisit/" + overlayId + ".kmz";
+            operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+        } else if(overlayId.indexOf("Cloud") > -1) {
+            filePath += "Cloud/" + overlayId + ".kmz";
+            operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+        } else if(overlayId.indexOf("Precipitation") > -1) {
+            filePath += "Precipitation/" + overlayId + ".kmz";
+            operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+        } else {
+            switch(overlayId) {
+            case "Black_Marble":
+                filePath += "Other/Black_Marble";
+                operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+                break;
+            case "ASTER":
+                filePath += "Other/ASTER.kml";
+                operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+                break;
+            case "ASTER_SMALL":
+                filePath += "Other/ASTER_SMALL.kml";
+                operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+                break;
+             //superoverlay, need to gen tiles. + screenoverlay
+            case "Globcover":
+                if(value) {
+                    myWindow = window.open("", "", "width=775, height=600");
+                    myWindow.document.write("<img src=\"Resources/overlay/Other/GlobCover/globLegend.png\">");
+                }
+                break;
+            //to large, causes browser crashing. Needs to be optimized.
+            case "Landsat":
+                break;
+            //need to gen tiles + screenoverlay
+            case "MODIS":
+                if(value) {
+                    myWindow = window.open("", "", "width=325, height=400");
+                    myWindow.document.write("<img src=\"Resources/overlay/Other/modis/modis_overlay.png\">");
+                }
+                filePath += "Other/modis/modis";
+                operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+                break;
+            //Also pretty large, breaks under normal use.
+            case "Sentinel-2":
+                filePath += "Other/Sentinel-2.kmz";
+                operations.manageOverlay(cesiumInstances[activeInstance], filePath, value);
+                break;
+            }
+        }
+    };
+
+    //Handles the creation and management of 3D data from kml overlays such as cloud cover
+    //and rainfall.
+    this.toggle3D = function(overlayId, value) {
+
+    };
+
+    //Manages the different available sources. Receives an id, operation, and a true/false value
+    //from the checkbox press and acts accordingly.
+    this.sourceManager = function(satId, operation, value) {
+        var filePath = "Resources/kml/" + satId + "_";
+        if(operation === "ground" || operation ==="nadir" || operation === "actuals") {
+            var extension = operation === "actuals" ? ".kml" : ".kmz";
+            operations.manageSources(cesiumInstances[activeInstance], filePath+operation+extension, value);
+        } else if(operation === "anim") {
+            operations.generateAnimation(cesiumInstances[activeInstance], satId, value);
         }
     };
 
